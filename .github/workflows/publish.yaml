@@ -17,7 +17,7 @@ jobs:
 
     env:
       registry: ghcr.io
-      gcr_image: ${{ env.registry }}/${{ github.repository }}
+      gcr_image: ghcr.io/${{ github.repository }}
 
     permissions:
       contents: read
