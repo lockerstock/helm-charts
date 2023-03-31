@@ -16,7 +16,8 @@ jobs:
           - base-nginx
 
     env:
-      gcr_image: ghcr.io/${{ github.repository }}/${{ matrix.chart }}
+      registry: ghcr.io
+      gcr_image: ${{ env.registry }}/${{ github.repository }}
 
     permissions:
       contents: read
@@ -30,10 +31,14 @@ jobs:
         uses: Azure/setup-helm@v1
 
       - name: Login to Helm Registry
-        run: echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ${{ env.gcr_image }} --username ${{ github.actor }} --password-stdin
+        run: echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ${{ env.registry }} --username ${{ github.actor }} --password-stdin
 
-      - name: Save Helm Chart to Local Registry
-        run: helm chart save ./charts/${{ matrix.chart }} ${{ env.gcr_image }}:${{ github.sha }}
+      - name: Get Chart Version
+        id: chart
+        run: echo "version=$(yq '.version' charts/${{ matrix.chart }}/Chart.yaml)"" >> "$GITHUB_OUTPUT"
+
+      - name: Package Helm Chart
+        run: helm package ./charts/${{ matrix.chart }}
 
       - name: Publish Chart to Container Registry
-        run: helm chart push ${{ env.gcr_image }}:${{ github.sha }}
+        run: helm push ${{ matrix.chart }}-${{ steps.chart.outputs.version }}.tgz oci://${{ env.gcr_image }}
