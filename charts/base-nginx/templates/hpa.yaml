@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "go-microservice.fullname" . }}
+  name: {{ include "base-nginx.fullname" . }}
   labels:
-    {{- include "go-microservice.labels" . | nindent 4 }}
+    {{- include "base-nginx.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "go-microservice.fullname" . }}
+    name: {{ include "base-nginx.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
