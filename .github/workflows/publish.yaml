@@ -1,0 +1,39 @@
+name: Publish Helm Chart
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-and-publish:
+    name: Build and Publish Helm Chart
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chart:
+          - go-microservice
+
+    env:
+      gcr_image: ghcr.io/${{ github.repository }}/${{ matrix.chart }}
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install helm
+        uses: Azure/setup-helm@v1
+
+      - name: Login to Helm Registry
+        run: echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ${{ env.gcr_image }} --username ${{ github.actor }} --password-stdin
+
+      - name: Save Helm Chart to Local Registry
+        run: helm chart save ./charts/${{ matrix.chart }} ${{ env.gcr_image }}:${{ github.sha }}
+
+      - name: Publish Chart to Container Registry
+        run: helm chart push ${{ env.gcr_image }}:${{ github.sha }}
