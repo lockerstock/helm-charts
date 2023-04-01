@@ -1,0 +1,66 @@
+{{- if .Values.ingressRoute.enabled -}}
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    {{- include "microservice.labels" . | nindent 4 }}
+  annotations:
+    {{ if eq .Values.environment "staging" }}
+    kube-external-sync.io/replicate-to-matching: lockerstock/feature-branch,!lockerstock/{{ .Release.Name }}
+    kube-external-sync.io/top-level-domain: '*.feature.lockerstock.dev'
+    {{- end }}
+    {{- with .Values.ingressRoute.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  tls:
+    domains:
+      - main: {{ .Values.ingressRoute.hostname }}
+  entryPoints: 
+    - websecure
+  routes:
+    {{ if or (len .Values.ingressRoute.base.paths) (len .Values.ingressRoute.base.pathPrefixes) }}
+    - kind: Rule
+      match: >
+        Host(`{{ .Values.ingressRoute.hostname }}`)
+        {{ if len .Values.ingressRoute.base.paths }}&& Path(`{{ join "`,`" .Values.ingressRoute.base.paths }}`){{- end }}
+        {{ if len .Values.ingressRoute.base.pathPrefixes }}&& PathPrefix(`{{ join "`,`" .Values.ingressRoute.base.pathPrefixes }}`){{- end }}
+
+      {{- if len .Values.ingressRoute.middlewares }}
+      middlewares:
+        {{- range .Values.ingressRoute.middlewares }}
+        - name: {{ .name }}
+          namespace: '{{ if eq $.Values.environment "production" }}production{{ else }}staging{{ end }}'
+        {{- end }}
+      {{- end }}
+
+      services:
+        - kind: Service
+          name: {{ .Release.Name }}
+          namespace: {{ .Release.Namespace }}
+          port: {{ .Values.service.port }}
+    {{- end }}
+    
+    {{ if or (len .Values.ingressRoute.admin.paths) (len .Values.ingressRoute.admin.pathPrefixes) }}
+    - kind: Rule
+      match: >
+        Host(`{{ .Values.ingressRoute.hostname }}`) 
+        {{ if len .Values.ingressRoute.admin.paths }}&& Path(`{{ join "`,`" .Values.ingressRoute.admin.paths }}`){{- end }}
+        {{ if len .Values.ingressRoute.admin.pathPrefixes }}&& PathPrefix(`{{ join "`,`" .Values.ingressRoute.admin.pathPrefixes }}`){{- end }}
+
+      {{- if len .Values.ingressRoute.middlewares }}
+      middlewares:
+        {{- range .Values.ingressRoute.middlewares }}
+        - name: {{ .name }}
+          namespace: '{{ if eq $.Values.environment "production" }}production{{ else }}staging{{ end }}'
+        {{- end }}
+      {{- end }}
+
+      services:
+        - kind: Service
+          name: {{ .Release.Name }}
+          namespace: {{ .Release.Namespace }}
+          port: {{ .Values.service.port }}
+    {{- end }}
+{{- end }}

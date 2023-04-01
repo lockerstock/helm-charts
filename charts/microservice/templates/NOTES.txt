@@ -1,0 +1,1 @@
+kubectl get pods {{ .Release.Name }} --namespace {{ .Release.Namespace }}
