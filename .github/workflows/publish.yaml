@@ -33,12 +33,29 @@ jobs:
       - name: Login to Helm Registry
         run: echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ${{ env.registry }} --username ${{ github.actor }} --password-stdin
 
+      - name: Short Sha
+        id: short
+        uses: lockerstock/github-actions/get-short-sha@main
+
       - name: Get Chart Version
         id: chart
         run: echo "version=$(yq '.version' charts/${{ matrix.chart }}/Chart.yaml)" >> "$GITHUB_OUTPUT"
+
+      - name: Version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "version=${{ steps.chart.outputs.version }}-${{ steps.short.outputs.short_sha }}" >> $GITHUB_OUTPUT
+
+          elif [ "${{ github.event_name }}" = "push" && "${{ github.ref_name }}" = "${{ github.event.repository.default_branch }}" ]; then
+            echo "version=${{ steps.chart.outputs.version }}"
+
+      - name: Update versions
+        run: yq --inplace '.version = "${{ steps.version.outputs.variable }}"' Chart.yaml
+        working-directory: ${{ inputs.chart_path }}
 
       - name: Package Helm Chart
         run: helm package ./charts/${{ matrix.chart }}
 
       - name: Publish Chart to Container Registry
-        run: helm push ${{ matrix.chart }}-${{ steps.chart.outputs.version }}.tgz oci://${{ env.gcr_image }}
+        run: helm push ${{ matrix.chart }}-${{ steps.version.outputs.version }}.tgz oci://${{ env.gcr_image }}
