@@ -54,7 +54,7 @@ jobs:
 
       - name: Update versions
         run: yq --inplace '.version = "${{ steps.version.outputs.variable }}"' Chart.yaml
-        working-directory: ${{ inputs.chart_path }}
+        working-directory: ./charts/${{ matrix.chart }}
 
       - name: Package Helm Chart
         run: helm package ./charts/${{ matrix.chart }}
