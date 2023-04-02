@@ -43,14 +43,12 @@ jobs:
 
       - name: Version
         id: version
-        run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            echo "version=${{ steps.chart.outputs.version }}-${{ steps.short.outputs.short_sha }}" >> $GITHUB_OUTPUT
-
-          elif [ "${{ github.event_name }}" = "push" && "${{ github.ref_name }}" = "${{ github.event.repository.default_branch }}" ]; then
-            echo "version=${{ steps.chart.outputs.version }}"
-
-          fi
+        uses: lockerstock/github-actions/determine-environment@main
+        with:
+          token: ${{ inputs.token }}
+          production_variable: ${{ steps.chart.outputs.version }}
+          staging_variable: ${{ steps.chart.outputs.version }}
+          development_variable: '${{ steps.chart.outputs.version }}-${{ steps.short.outputs.short_sha }}'
 
       - name: Update versions
         run: yq --inplace '.version = "${{ steps.version.outputs.variable }}"' Chart.yaml
