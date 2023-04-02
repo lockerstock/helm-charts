@@ -50,6 +50,8 @@ jobs:
           elif [ "${{ github.event_name }}" = "push" && "${{ github.ref_name }}" = "${{ github.event.repository.default_branch }}" ]; then
             echo "version=${{ steps.chart.outputs.version }}"
 
+          fi
+
       - name: Update versions
         run: yq --inplace '.version = "${{ steps.version.outputs.variable }}"' Chart.yaml
         working-directory: ${{ inputs.chart_path }}
