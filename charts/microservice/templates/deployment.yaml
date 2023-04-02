@@ -76,6 +76,11 @@ spec:
               value: eks-app-opentelemetry:4317
             {{- end }}
 
+            {{- if .Values.deployment.cache.enabled }}
+            - name: CACHE_ADDRESS
+              value: {{ .Release.Name }}-cache:{{ .Values.deployment.cache.service.port }}
+            {{- end }}
+
             {{- if len .Values.deployment.env }}
             {{- toYaml .Values.deployment.env | nindent 12 }}
             {{- end }}

@@ -64,6 +64,9 @@ deployment:
       # Enabling MongoDB below will spin up extra resources to facilitate standard connection to a MongoDB Atlas instance.
       # This includes an ExternalSecret to retrieve the MongoDB connection string and environment variables for the deployment to allow the application to connect to it.
       enabled: true
+  
+  cache:
+    enabled: true
 
   open-telemetry:
     # Enabling OpenTelemetry below will provide the internal URL environment variable to the deployment for the application to send traces to.

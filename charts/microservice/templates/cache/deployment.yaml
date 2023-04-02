@@ -1,0 +1,35 @@
+{{ if .Values.deployment.database.mongo.enabled }}
+{{ if or (eq .Values.environment "staging") (eq .Values.environment "production") }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-cache
+  labels:
+    app.kubernetes.io/role: supporting-service
+    app.kubernetes.io/type: cache
+    {{- include "microservice.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/role: supporting-service
+      app.kubernetes.io/type: cache
+      {{- include "microservice.selectorLabels" . | nindent 6 }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/role: supporting-service
+        app.kubernetes.io/type: cache
+        {{- include "microservice.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: cache
+          image: {{ .Values.deployment.cache.image.repository }}:{{ .Values.deployment.cache.image.tag }}
+          ports:
+            - name: {{ .Values.deployment.cache.service.portName }}
+              containerPort: {{ .Values.deployment.cache.service.port }}
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.deployment.cache.resources | nindent 12 }}
+{{- end }}
+{{- end }}

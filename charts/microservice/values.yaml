@@ -34,17 +34,13 @@ ingressRoute:
     paths: []
     pathPrefixes: []
 
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+resources:
+  requests:
+    cpu: 100m
+    memory: 50Mi
+  limits:
+    cpu: 150m
+    memory: 100Mi
 
 autoscaling:
   enabled: false
@@ -62,6 +58,25 @@ deployment:
       # Enabling MongoDB below will spin up extra resources to facilitate standard connection to a MongoDB Atlas instance.
       # This includes an ExternalSecret to retrieve the MongoDB connection string and environment variables for the deployment to allow the application to connect to it.
       enabled: false
+
+  cache:
+    # Enabling cache below will spin up an additional deployment and service for cache. The default cache will use a redis image but can be configured with a different Docker image.
+    # Additionally, proper environment variables will be inserted into the main application's deployment specification with this enabled.
+    enabled: false
+    service:
+      type: ClusterIP
+      port: 6379
+      portName: cache
+    image:
+      repository: redis
+      pullPolicy: IfNotPresent
+      # Overrides the image tag whose default is the chart appVersion.
+      tag: '7-alpine'
+    resources:
+      requests:
+        cpu: 100m
+        memory: 500Mi
+      limits: {}
 
   opentelemetry:
     # Enabling OpenTelemetry below will provide the internal URL environment variable to the deployment for the application to send traces to.
@@ -85,11 +100,5 @@ deployment:
   env: []
 
   probes:
-    liveness:
-      httpGet:
-        path: /rest/liveness
-        port: http
-    readiness: 
-      httpGet:
-        path: /rest/readiness
-        port: http
+    liveness: {}
+    readiness: {}
