@@ -58,4 +58,4 @@ jobs:
         run: helm package ./charts/${{ matrix.chart }}
 
       - name: Publish Chart to Container Registry
-        run: helm push ${{ matrix.chart }}-${{ steps.version.outputs.version }}.tgz oci://${{ env.gcr_image }}
+        run: helm push ${{ matrix.chart }}-${{ steps.version.outputs.variable }}.tgz oci://${{ env.gcr_image }}
