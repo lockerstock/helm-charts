@@ -81,6 +81,24 @@ spec:
               value: {{ .Release.Name }}-cache:{{ .Values.deployment.cache.service.port }}
             {{- end }}
 
+            {{- if .Values.deployment.auth0.enabled }}
+            - name: AUTH0_DOMAIN
+              valueFrom:
+                secretKeyRef:
+                  name: 'auth0-{{ .Release.Name }}'
+                  key: AUTH0_DOMAIN
+            - name: AUTH0_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: 'auth0-{{ .Release.Name }}'
+                  key: AUTH0_CLIENT_ID
+            - name: AUTH0_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: 'auth0-{{ .Release.Name }}'
+                  key: AUTH0_CLIENT_SECRET
+            {{- end }}
+
             {{- if len .Values.deployment.env }}
             {{- toYaml .Values.deployment.env | nindent 12 }}
             {{- end }}
