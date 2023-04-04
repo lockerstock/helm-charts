@@ -48,12 +48,12 @@ jobs:
         run: |
           VERSION_EXISTS=$(gh api \
             /orgs/${{ github.repository_owner }}/packages/container/${GITHUB_REPOSITORY##*/}%2F${{ matrix.chart }}/versions \
-            --jq 'map(.metadata.container.tags | any(. == "${{ steps.chart.outputs.version }}")) | any')
+            --jq 'map(.metadata.container.tags | any(. == "${{ steps.current.outputs.version }}")) | any')
 
           if [ "$VERSION_EXISTS" = true ]; then
-            echo "version=${{ steps.chart.outputs.version }}-${{ steps.short.outputs.short_sha }}" >> "$GITHUB_OUTPUT"
+            echo "version=${{ steps.current.outputs.version }}-${{ steps.short.outputs.short_sha }}" >> "$GITHUB_OUTPUT"
           else 
-            echo "version=${{ steps.chart.outputs.version }}" >> "$GITHUB_OUTPUT"
+            echo "version=${{ steps.current.outputs.version }}" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Update versions
