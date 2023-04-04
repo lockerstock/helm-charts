@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-  pull_request:
+      - feature/initial-exploration
 
 jobs:
   build-and-publish:
@@ -38,24 +38,30 @@ jobs:
         uses: lockerstock/github-actions/get-short-sha@main
 
       - name: Get Chart Version
-        id: chart
+        id: current
         run: echo "version=$(yq '.version' charts/${{ matrix.chart }}/Chart.yaml)" >> "$GITHUB_OUTPUT"
 
-      - name: Version
-        id: version
-        uses: lockerstock/github-actions/determine-environment@main
-        with:
-          token: ${{ inputs.token }}
-          production_variable: ${{ steps.chart.outputs.version }}
-          staging_variable: ${{ steps.chart.outputs.version }}
-          development_variable: '${{ steps.chart.outputs.version }}-${{ steps.short.outputs.short_sha }}'
+      - name: Create Chart Version
+        id: chart
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION_EXISTS=$(gh api \
+            /orgs/${{ github.repository_owner }}/packages/container/${GITHUB_REPOSITORY##*/}%2F${{ matrix.chart }}/versions \
+            --jq 'map(.metadata.container.tags | any(. == "${{ steps.chart.outputs.version }}")) | any')
+
+          if [ "$VERSION_EXISTS" = true ]; then
+            echo "version=${{ steps.chart.outputs.version }}-${{ steps.short.outputs.short_sha }}" >> "$GITHUB_OUTPUT"
+          else 
+            echo "version=${{ steps.chart.outputs.version }}" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Update versions
-        run: yq --inplace '.version = "${{ steps.version.outputs.variable }}"' Chart.yaml
+        run: yq --inplace '.version = "${{ steps.chart.outputs.version }}"' Chart.yaml
         working-directory: ./charts/${{ matrix.chart }}
 
       - name: Package Helm Chart
         run: helm package ./charts/${{ matrix.chart }}
 
       - name: Publish Chart to Container Registry
-        run: helm push ${{ matrix.chart }}-${{ steps.version.outputs.variable }}.tgz oci://${{ env.gcr_image }}
+        run: helm push ${{ matrix.chart }}-${{ steps.chart.outputs.version }}.tgz oci://${{ env.gcr_image }}
