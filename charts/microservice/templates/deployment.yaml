@@ -22,7 +22,7 @@ spec:
       {{- end }}
       containers:
         - name: {{ .Release.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
 
           {{- if len .Values.deployment.container.args }}
@@ -46,7 +46,7 @@ spec:
             - name: CONTAINER_IMAGE_NAME
               value: {{ .Values.image.repository }}
             - name: CONTAINER_IMAGE_TAG
-              value: {{ .Values.image.tag | default .Chart.AppVersion | quote }}
+              value: {{ .Values.image.tag | quote }}
             - name: CONTAINER_NAME
               valueFrom:
                 fieldRef:
