@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         chart:
-          # - microservice
+          - microservice
           - base-nginx
 
     env:
@@ -49,7 +49,7 @@ jobs:
         run: |
           CONTAINER_EXISTS=$(gh api \
             /orgs/${{ github.repository_owner }}/packages?package_type=container \
-            --jq "any(.[]; select(.name == \"${GITHUB_REPOSITORY##*/}/${{ matrix.chart }}\"))")
+            --jq 'any(.[]; select(.name == "helm-charts/${{ matrix.chart }}"))')
 
           echo "exists=$CONTAINER_EXISTS" >> "$GITHUB_OUTPUT"
 
