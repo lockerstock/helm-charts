@@ -44,6 +44,8 @@ jobs:
 
       - name: Container Exists
         id: exists
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           CONTAINER_EXISTS=$(gh api \
             /orgs/${{ github.repository_owner }}/packages?package_type=container \
