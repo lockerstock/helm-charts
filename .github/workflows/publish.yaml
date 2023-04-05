@@ -42,23 +42,30 @@ jobs:
         id: current
         run: echo "version=$(yq '.version' charts/${{ matrix.chart }}/Chart.yaml)" >> "$GITHUB_OUTPUT"
 
-      - name: Create Chart Version
-        id: chart
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Container Exists
+        id: exists
         run: |
           CONTAINER_EXISTS=$(gh api \
             /orgs/${{ github.repository_owner }}/packages?package_type=container \
             --jq "any(.[]; select(.name == \"${GITHUB_REPOSITORY##*/}/${{ matrix.chart }}\"))")
 
-          VERSION_EXISTS=$(gh api \
-            /orgs/${{ github.repository_owner }}/packages/container/${GITHUB_REPOSITORY##*/}%2F${{ matrix.chart }}/versions \
-            --jq 'map(.metadata.container.tags | any(. == "${{ steps.current.outputs.version }}")) | any')
+          echo "exists=$CONTAINER_EXISTS" >> "$GITHUB_OUTPUT"
 
-          if [ "$CONTAINER_EXISTS" = true & "$VERSION_EXISTS" = true ]; then
-            echo "version=${{ steps.current.outputs.version }}-${{ steps.short.outputs.short_sha }}" >> "$GITHUB_OUTPUT"
-          else 
-            echo "version=${{ steps.current.outputs.version }}" >> "$GITHUB_OUTPUT"
+      - name: Create Chart Version
+        id: chart
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "version=${{ steps.current.outputs.version }}" >> "$GITHUB_OUTPUT"
+
+          if [ "${{ steps.exists.outputs.exists }}" = true ]; then
+            VERSION_EXISTS=$(gh api \
+              /orgs/${{ github.repository_owner }}/packages/container/${GITHUB_REPOSITORY##*/}%2F${{ matrix.chart }}/versions \
+              --jq 'map(.metadata.container.tags | any(. == "${{ steps.current.outputs.version }}")) | any')
+
+            if [ "$VERSION_EXISTS" = true ]; then
+              echo "version=${{ steps.current.outputs.version }}-${{ steps.short.outputs.short_sha }}" >> "$GITHUB_OUTPUT"
+            fi
           fi
 
       - name: Update versions
