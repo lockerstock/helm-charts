@@ -23,7 +23,8 @@ service:
 
 ingressRoute:
   enabled: false
-  hostname: '$HOSTNAME'
+  # Recommended value for `hostname` is the environment variable template variable of $HOSTNAME so it can be resolved and replaced during deployment.
+  hostname: ''
   annotations: {}
   middlewares:
     - name: response-headers

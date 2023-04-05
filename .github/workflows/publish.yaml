@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feature/initial-exploration
 
 jobs:
   build-and-publish:
@@ -13,7 +12,8 @@ jobs:
     strategy:
       matrix:
         chart:
-          - base-nginx
+          - microservice
+          # - base-nginx
 
     env:
       registry: ghcr.io
