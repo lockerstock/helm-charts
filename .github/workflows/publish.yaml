@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         chart:
-          - microservice
+          # - microservice
           - base-nginx
 
     env:
