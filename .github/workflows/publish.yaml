@@ -48,8 +48,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           CONTAINER_EXISTS=$(gh api \
-		        /orgs/${{ github.repository_owner }}/packages?package_type=container \
-		        --jq 'any(.[]; select(.name == "${GITHUB_REPOSITORY##*/}/${{ matrix.chart }}"))')
+            /orgs/${{ github.repository_owner }}/packages?package_type=container \
+            --jq 'any(.[]; select(.name == "${GITHUB_REPOSITORY##*/}/${{ matrix.chart }}"))')
 
           VERSION_EXISTS=$(gh api \
             /orgs/${{ github.repository_owner }}/packages/container/${GITHUB_REPOSITORY##*/}%2F${{ matrix.chart }}/versions \
