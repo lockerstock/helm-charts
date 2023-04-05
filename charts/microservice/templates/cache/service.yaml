@@ -1,0 +1,27 @@
+{{ if .Values.deployment.database.mongo.enabled }}
+{{ if or (eq .Values.environment "staging") (eq .Values.environment "production") }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-cache
+  labels:
+    app.kubernetes.io/role: supporting-service
+    app.kubernetes.io/type: cache
+    {{- include "microservice.labels" . | nindent 4 }}
+  annotations:
+    {{ if eq .Values.environment "staging" }}
+    kube-external-sync.io/replicate-to-matching: lockerstock/feature-branch,lockerstock/{{ .Release.Name }}
+    {{- end }}
+spec:
+  type: {{ .Values.deployment.cache.service.type }}
+  ports:
+    - name: {{ .Values.deployment.cache.service.portName }}
+      protocol: TCP
+      port: {{ .Values.deployment.cache.service.port }}
+      targetPort: {{ .Values.deployment.cache.service.portName }} 
+  selector:
+    app.kubernetes.io/role: supporting-service
+    app.kubernetes.io/type: cache
+    {{- include "microservice.selectorLabels" . | nindent 4 }}
+{{- end }}
+{{- end }}

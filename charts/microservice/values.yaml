@@ -1,0 +1,110 @@
+# Default values for microservice.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+environment: local
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "staging"
+
+imagePullSecrets: 
+  - name: image-pull-secret
+
+service:
+  annotations: {}
+  type: ClusterIP
+  port: 80
+  portName: http
+
+ingressRoute:
+  enabled: false
+  # Recommended value for `hostname` is the environment variable template variable of $HOSTNAME so it can be resolved and replaced during deployment.
+  hostname: ''
+  annotations: {}
+  middlewares:
+    - name: response-headers
+  base:
+    paths: []
+    pathPrefixes: []
+  admin:
+    paths: []
+    pathPrefixes: []
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 50Mi
+  limits:
+    cpu: 150m
+    memory: 100Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+deployment:
+  container:
+    args: []
+
+  database:
+    mongo:
+      # Enabling MongoDB below will spin up extra resources to facilitate standard connection to a MongoDB Atlas instance.
+      # This includes an ExternalSecret to retrieve the MongoDB connection string and environment variables for the deployment to allow the application to connect to it.
+      enabled: false
+
+  auth0:
+    # Enabling MongoDB below will spin up extra resources to facilitate standard connection to a Auth0 application instance.
+    # This includes an ExternalSecret to retrieve the Auth0 secrets and environment variables for the deployment to allow the application to connect to it.
+    enabled: false
+
+  cache:
+    # Enabling cache below will spin up an additional deployment and service for cache. The default cache will use a redis image but can be configured with a different Docker image.
+    # Additionally, proper environment variables will be inserted into the main application's deployment specification with this enabled.
+    enabled: false
+    service:
+      type: ClusterIP
+      port: 6379
+      portName: cache
+    image:
+      repository: redis
+      pullPolicy: IfNotPresent
+      # Overrides the image tag whose default is the chart appVersion.
+      tag: '7-alpine'
+    resources:
+      requests:
+        cpu: 100m
+        memory: 500Mi
+      limits: {}
+
+  opentelemetry:
+    # Enabling OpenTelemetry below will provide the internal URL environment variable to the deployment for the application to send traces to.
+    enabled: false
+
+  config:
+    # Log level (trace, debug, info, warn, error)
+    LOG_LEVEL: 'info'
+
+    # Log format (plain, json)
+    LOG_FORMAT: 'plain'
+
+    # Go env (development, production)
+    GO_ENV: production
+
+    # Gin env (debug, test, release)
+    GIN_MODE: release
+
+  # Custom env objects will be inserted into the deployment verbatim and should be provided in standard Kubernetes format
+  # https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container
+  env: []
+
+  probes:
+    liveness: {}
+    readiness: {}

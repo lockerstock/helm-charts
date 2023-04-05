@@ -1,0 +1,112 @@
+# Default values for microservice.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+environment: staging
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "1.23"
+
+imagePullSecrets: 
+  - name: image-pull-secret
+
+service:
+  annotations:
+    something: different
+  type: ClusterIP
+  port: 8080
+  portName: ptth
+
+ingressRoute:
+  enabled: true
+  hostname: 'example.com'
+  annotations: 
+    something: else
+  base:
+    paths: 
+      - /path/to/resource
+    pathPrefixes: 
+      - /resources
+  admin:
+    paths: /path/to/admin/resources
+    pathPrefixes: /admin/resources
+
+resources: 
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 60
+  targetMemoryUtilizationPercentage: 60
+
+deployment:
+  container:
+    args: ["start"]
+
+  database:
+    mongo:
+      # Enabling MongoDB below will spin up extra resources to facilitate standard connection to a MongoDB Atlas instance.
+      # This includes an ExternalSecret to retrieve the MongoDB connection string and environment variables for the deployment to allow the application to connect to it.
+      enabled: true
+  
+  cache:
+    enabled: true
+
+  auth0:
+    # Enabling MongoDB below will spin up extra resources to facilitate standard connection to a Auth0 application instance.
+    # This includes an ExternalSecret to retrieve the Auth0 secrets and environment variables for the deployment to allow the application to connect to it.
+    enabled: true
+
+  open-telemetry:
+    # Enabling OpenTelemetry below will provide the internal URL environment variable to the deployment for the application to send traces to.
+    enabled: true
+
+  config:
+    # Log level (trace, debug, info, warn, error)
+    LOG_LEVEL: 'trace'
+
+    # Log format (plain, json)
+    LOG_FORMAT: 'json'
+
+    # Go env (development, production)
+    GO_ENV: development
+
+    # Gin env (debug, test, release)
+    GIN_MODE: debug
+
+  # Custom env objects will be inserted into the deployment verbatim and should be provided in standard Kubernetes format
+  # https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container
+  env:
+    - name: SESSION_API_ADDRESS
+      value: http://session-api
+
+    - name: PROFILES_API_ADDRESS
+      value: http://profiles-api
+
+  probes:
+    liveness: 
+      httpGet:
+        path: /
+        port: ptth
+    readiness: 
+      exec:
+        command:
+        - cat
+        - /tmp/healthy
+      httpGet: {}

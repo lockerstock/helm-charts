@@ -1,0 +1,111 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    {{- include "microservice.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "microservice.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "microservice.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Release.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+          {{- if len .Values.deployment.container.args }}
+          args: 
+            {{- toYaml .Values.deployment.container.args | nindent 12 }}
+          {{- end }}
+
+          ports:
+            - name: {{ .Values.service.portName }}
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          env:
+            - name: PORT
+              value: {{ .Values.service.port | quote }}
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: ENVIRONMENT
+              value: {{ .Values.environment }}
+            - name: CONTAINER_IMAGE_NAME
+              value: {{ .Values.image.repository }}
+            - name: CONTAINER_IMAGE_TAG
+              value: {{ .Values.image.tag | quote }}
+            - name: CONTAINER_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+                  
+            - name: LOG_LEVEL
+              value: {{ .Values.deployment.config.LOG_LEVEL }}
+            - name: LOG_FORMAT
+              value: {{ .Values.deployment.config.LOG_FORMAT }}
+            - name: GO_ENV
+              value: {{ .Values.deployment.config.GO_ENV }}
+            - name: GIN_MODE
+              value: {{ .Values.deployment.config.GIN_MODE }}
+
+            {{- if .Values.deployment.database.mongo.enabled }}
+            - name: MONGO_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: 'mongodb-{{ .Release.Name }}'
+                  key: connectionString
+            - name: MONGO_DATABASE
+              value: {{ trimSuffix "-api" .Chart.Name }}
+            {{- end }}
+
+            {{- if .Values.deployment.opentelemetry.enabled }}
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: eks-app-opentelemetry:4317
+            {{- end }}
+
+            {{- if .Values.deployment.cache.enabled }}
+            - name: CACHE_ADDRESS
+              value: {{ .Release.Name }}-cache:{{ .Values.deployment.cache.service.port }}
+            {{- end }}
+
+            {{- if .Values.deployment.auth0.enabled }}
+            - name: AUTH0_DOMAIN
+              valueFrom:
+                secretKeyRef:
+                  name: 'auth0-{{ .Release.Name }}'
+                  key: AUTH0_DOMAIN
+            - name: AUTH0_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: 'auth0-{{ .Release.Name }}'
+                  key: AUTH0_CLIENT_ID
+            - name: AUTH0_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: 'auth0-{{ .Release.Name }}'
+                  key: AUTH0_CLIENT_SECRET
+            {{- end }}
+
+            {{- if len .Values.deployment.env }}
+            {{- toYaml .Values.deployment.env | nindent 12 }}
+            {{- end }}
+
+          livenessProbe:
+            {{- toYaml .Values.deployment.probes.liveness | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.deployment.probes.readiness | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
