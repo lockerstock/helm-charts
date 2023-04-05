@@ -25,4 +25,3 @@ spec:
     {{- include "microservice.selectorLabels" . | nindent 4 }}
 {{- end }}
 {{- end }}
-
