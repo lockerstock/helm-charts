@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feature/fix-notfound-container
 
 jobs:
   build-and-publish:
@@ -46,11 +47,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          CONTAINER_EXISTS=$(gh api \
+		        /orgs/${{ github.repository_owner }}/packages?package_type=container \
+		        --jq 'any(.[]; select(.name == "${GITHUB_REPOSITORY##*/}/${{ matrix.chart }}"))')
+
           VERSION_EXISTS=$(gh api \
             /orgs/${{ github.repository_owner }}/packages/container/${GITHUB_REPOSITORY##*/}%2F${{ matrix.chart }}/versions \
             --jq 'map(.metadata.container.tags | any(. == "${{ steps.current.outputs.version }}")) | any')
 
-          if [ "$VERSION_EXISTS" = true ]; then
+          if [ "$CONTAINER_EXISTS" = true & "$VERSION_EXISTS" = true ]; then
             echo "version=${{ steps.current.outputs.version }}-${{ steps.short.outputs.short_sha }}" >> "$GITHUB_OUTPUT"
           else 
             echo "version=${{ steps.current.outputs.version }}" >> "$GITHUB_OUTPUT"
