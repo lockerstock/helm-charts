@@ -48,7 +48,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           package_name: helm-charts/${{ matrix.chart }}
-          package_version: ${{ steps.current.output.version }}
+          package_version: ${{ steps.current.outputs.version }}
 
       - name: Create Chart Version
         id: chart
