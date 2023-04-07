@@ -48,7 +48,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           package_name: helm-charts/${{ matrix.chart }}
-          package_version: ${{ steps.current.outputs.version }}
+          package_version: ${{ steps.chart.outputs.version }}
 
       - name: Update versions
         run: yq --inplace '.version = "${{ steps.chart.outputs.version }}"' Chart.yaml
