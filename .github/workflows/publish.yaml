@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feature/fix-notfound-container
 
 jobs:
   build-and-publish:
