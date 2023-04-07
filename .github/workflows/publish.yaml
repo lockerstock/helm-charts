@@ -46,7 +46,7 @@ jobs:
         id: exists
         uses: lockerstock/github-actions/package-has-version@main
         with:
-          token: ${{ secret.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           package_name: helm-charts/${{ matrix.chart }}
           package_version: ${{ steps.current.output.version }}
 
