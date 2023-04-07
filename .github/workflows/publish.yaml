@@ -40,45 +40,25 @@ jobs:
 
       - name: Get Chart Version
         id: current
-        run: echo "version=$(yq '.version' charts/${{ matrix.chart }}/Chart.yaml)" >> "$GITHUB_OUTPUT"
+        run: echo "version=$(yq '.version' charts/${{ matrix.chart }}/Chart.yaml)" >> $GITHUB_OUTPUT
 
-      - name: Test Run Commands
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh api \
-            /orgs/${{ github.repository_owner }}/packages?package_type=container
-        
-          gh api \
-            /orgs/${{ github.repository_owner }}/packages?package_type=container \
-            --jq 'any(.[]; select(.name == "helm-charts/${{ matrix.chart }}"))'
-
-      - name: Container Exists
+      - name: Chart Version Exists
         id: exists
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          CONTAINER_EXISTS=$(gh api \
-            /orgs/${{ github.repository_owner }}/packages?package_type=container \
-            --jq 'any(.[]; select(.name == "helm-charts/${{ matrix.chart }}"))')
-
-          echo "exists=$CONTAINER_EXISTS" >> "$GITHUB_OUTPUT"
+        uses: lockerstock/github-actions/package-has-version@main
+        with:
+          token: ${{ secret.GITHUB_TOKEN }}
+          package_name: helm-charts/${{ matrix.chart }}
+          package_version: ${{ steps.current.output.version }}
 
       - name: Create Chart Version
         id: chart
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "version=${{ steps.current.outputs.version }}" >> "$GITHUB_OUTPUT"
+          echo "version=${{ steps.current.outputs.version }}" >> $GITHUB_OUTPUT
 
-          if [ "${{ steps.exists.outputs.exists }}" = true ]; then
-            VERSION_EXISTS=$(gh api \
-              /orgs/${{ github.repository_owner }}/packages/container/${GITHUB_REPOSITORY##*/}%2F${{ matrix.chart }}/versions \
-              --jq 'map(.metadata.container.tags | any(. == "${{ steps.current.outputs.version }}")) | any')
-
-            if [ "$VERSION_EXISTS" = true ]; then
-              echo "version=${{ steps.current.outputs.version }}-${{ steps.short.outputs.short_sha }}" >> "$GITHUB_OUTPUT"
-            fi
+          if [[ "${{ steps.exists.outputs.package_exists }}" = true && "${{ steps.exists.outputs.version_exists }}" = true ]]; then
+            echo "version=${{ steps.current.outputs.version }}-${{ steps.short.outputs.short_sha }}" >> $GITHUB_OUTPUT
           fi
 
       - name: Update versions
