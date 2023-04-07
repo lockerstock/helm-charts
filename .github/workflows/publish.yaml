@@ -13,7 +13,7 @@ jobs:
       matrix:
         chart:
           - microservice
-          # - base-nginx
+          - base-nginx
 
     env:
       registry: ghcr.io
@@ -38,23 +38,16 @@ jobs:
         uses: lockerstock/github-actions/get-short-sha@main
 
       - name: Get Chart Version
-        id: current
-        run: echo "version=$(yq '.version' charts/${{ matrix.chart }}/Chart.yaml)" >> "$GITHUB_OUTPUT"
-
-      - name: Create Chart Version
         id: chart
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          VERSION_EXISTS=$(gh api \
-            /orgs/${{ github.repository_owner }}/packages/container/${GITHUB_REPOSITORY##*/}%2F${{ matrix.chart }}/versions \
-            --jq 'map(.metadata.container.tags | any(. == "${{ steps.current.outputs.version }}")) | any')
+        run: echo "version=$(yq '.version' charts/${{ matrix.chart }}/Chart.yaml)" >> $GITHUB_OUTPUT
 
-          if [ "$VERSION_EXISTS" = true ]; then
-            echo "version=${{ steps.current.outputs.version }}-${{ steps.short.outputs.short_sha }}" >> "$GITHUB_OUTPUT"
-          else 
-            echo "version=${{ steps.current.outputs.version }}" >> "$GITHUB_OUTPUT"
-          fi
+      - name: Chart Version Exists
+        id: exists
+        uses: lockerstock/github-actions/package-has-version@main
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          package_name: helm-charts/${{ matrix.chart }}
+          package_version: ${{ steps.chart.outputs.version }}
 
       - name: Update versions
         run: yq --inplace '.version = "${{ steps.chart.outputs.version }}"' Chart.yaml
@@ -64,4 +57,5 @@ jobs:
         run: helm package ./charts/${{ matrix.chart }}
 
       - name: Publish Chart to Container Registry
+        if: steps.exists.outputs.version_exists == false
         run: helm push ${{ matrix.chart }}-${{ steps.chart.outputs.version }}.tgz oci://${{ env.gcr_image }}
