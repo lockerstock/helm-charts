@@ -63,13 +63,18 @@ deployment:
     args: []
 
   database:
+    # Any MongoDB configuration assumes that the microservice has implemented and applied 
+    # the [database_user](https://app.terraform.io/app/lockerstock/registry/modules/private/lockerstock/database_user/mongodb) terraform module.
     mongo:
       # Enabling MongoDB below will spin up extra resources to facilitate standard connection to a MongoDB Atlas instance.
       # This includes an ExternalSecret to retrieve the MongoDB connection string and environment variables for the deployment to allow the application to connect to it.
       enabled: false
 
+  # Any Auth0 configuration assumes that the microservice has implemented and applied the proper terraform resources to populate GCP Secret Manager with the required keys.
+  # This section will likely only ever be relevant to session-api.
+  # Example: https://github.com/lockerstock/session-api/blob/main/deployments/terraform/modules/auth0/gcp.secrets.tf
   auth0:
-    # Enabling MongoDB below will spin up extra resources to facilitate standard connection to a Auth0 application instance.
+    # Enabling Auth0 below will spin up extra resources to facilitate standard connection to a Auth0 application instance.
     # This includes an ExternalSecret to retrieve the Auth0 secrets and environment variables for the deployment to allow the application to connect to it.
     enabled: false
 
@@ -114,5 +119,7 @@ deployment:
   env: []
 
   probes:
+    # Each of the following will be applied verbatim as yaml to the deployment's probes.
+    # Documentation available [here](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes).
     liveness: {}
     readiness: {}
