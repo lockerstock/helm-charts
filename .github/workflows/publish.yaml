@@ -44,7 +44,7 @@ jobs:
 
       - name: Chart Version Exists
         id: exists
-        uses: lockerstock/github-actions/package-has-version@main
+        uses: lockerstock/github-actions/package-has-version@feature/central-helm-deploy
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           package_name: helm-charts/${{ matrix.chart }}
