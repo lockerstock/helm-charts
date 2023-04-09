@@ -1,4 +1,4 @@
-{{ if .Values.deployment.database.mongo.enabled }}
+{{ if .Values.deployment.cache.enabled }}
 {{ if or (eq .Values.environment "staging") (eq .Values.environment "production") }}
 apiVersion: v1
 kind: Service
