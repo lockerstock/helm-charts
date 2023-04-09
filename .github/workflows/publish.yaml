@@ -58,5 +58,5 @@ jobs:
         run: helm package ./charts/${{ matrix.chart }}
 
       - name: Publish Chart to Container Registry
-        if: steps.exists.outputs.version_exists == false
+        if: steps.exists.outputs.version_exists == 'false'
         run: helm push ${{ matrix.chart }}-${{ steps.chart.outputs.version }}.tgz oci://${{ env.gcr_image }}
