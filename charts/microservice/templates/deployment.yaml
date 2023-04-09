@@ -25,7 +25,7 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
 
-          {{- if len .Values.deployment.container.args }}
+          {{- if not (empty .Values.deployment.container.args) }}
           args: 
             {{- toYaml .Values.deployment.container.args | nindent 12 }}
           {{- end }}
