@@ -31,26 +31,31 @@ spec:
 
               {{- if not (empty $rule.Headers) }}
                 ({{ range $index, $key := keys $rule.Headers }} Headers(`{{ $key }}`,`{{ index $rule.Headers $key }}`) {{ if lt (add 1 $index) (len $rule.Headers) }}&&{{- end }} {{- end }})
-                {{- if or (not (empty $rule.HeadersRegexp)) (not (empty $rule.Methods)) (not (empty $rule.Paths)) (not (empty $rule.PathPrefixes)) (not (empty $rule.ClientIPs)) }}&&{{- end }}
+                {{- if or (not (empty $rule.HeadersRegexp)) (not (empty $rule.Methods)) (not (empty $rule.Paths)) (not (empty $rule.PathPrefixes)) (not (empty $rule.Queries)) (not (empty $rule.ClientIPs)) }}&&{{- end }}
               {{- end }}
 
               {{- if not (empty $rule.HeadersRegexp) }}
                 ({{ range $index, $key := keys $rule.HeadersRegexp }} HeadersRegexp(`{{ $key }}`,`{{ index $rule.HeadersRegexp $key }}`) {{ if lt (add 1 $index) (len $rule.HeadersRegexp) }}&&{{- end }} {{- end }})
-                {{- if or (not (empty $rule.Methods)) (not (empty $rule.Paths)) (not (empty $rule.PathPrefixes)) (not (empty $rule.ClientIPs)) }}&&{{- end }}
+                {{- if or (not (empty $rule.Methods)) (not (empty $rule.Paths)) (not (empty $rule.PathPrefixes)) (not (empty $rule.Queries)) (not (empty $rule.ClientIPs)) }}&&{{- end }}
               {{- end }}
 
               {{- if not (empty $rule.Methods) }}
                 Method({{- range $index, $method := $rule.Methods }}`{{ $method }}`{{ if lt (add 1 $index) (len $rule.Methods) }},{{- end }}{{- end }})
-                {{- if or (not (empty $rule.Paths)) (not (empty $rule.PathPrefixes)) (not (empty $rule.ClientIPs)) }}&&{{- end }}
+                {{- if or (not (empty $rule.Paths)) (not (empty $rule.PathPrefixes)) (not (empty $rule.Queries)) (not (empty $rule.ClientIPs)) }}&&{{- end }}
               {{- end }}
 
               {{- if not (empty $rule.Paths) }}
                 Path({{- range $index, $path := $rule.Paths }}`{{ $path }}`{{ if lt (add 1 $index) (len $rule.Paths) }},{{- end }}{{- end }})
-                {{- if or (not (empty $rule.PathPrefixes)) (not (empty $rule.ClientIPs)) }}&&{{- end }}
+                {{- if or (not (empty $rule.PathPrefixes)) (not (empty $rule.Queries)) (not (empty $rule.ClientIPs)) }}&&{{- end }}
               {{- end }}
 
               {{- if not (empty $rule.PathPrefixes) }}
                 PathPrefix({{- range $index, $pathPrefix := $rule.PathPrefixes }}`{{ $pathPrefix }}`{{ if lt (add 1 $index) (len $rule.PathPrefixes) }},{{- end }}{{- end }})
+                {{- if or (not (empty $rule.Queries)) (not (empty $rule.ClientIPs)) }}&&{{- end }}
+              {{- end }}
+
+              {{- if not (empty $rule.Queries) }}
+                Query({{ range $index, $key := keys $rule.Queries }}`{{ $key }}={{ index $rule.Queries $key }}`{{ if lt (add 1 $index) (len $rule.Queries) }},{{- end }} {{- end }})
                 {{- if or (not (empty $rule.ClientIPs)) }}&&{{- end }}
               {{- end }}
 
