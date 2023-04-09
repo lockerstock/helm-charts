@@ -20,34 +20,52 @@ spec:
   entryPoints: 
     - websecure
   routes:
-    {{ if or (len .Values.ingressRoute.base.paths) (len .Values.ingressRoute.base.pathPrefixes) }}
+    {{ if len .Values.ingressRoute.rules }}
     - kind: Rule
       match: >
-        Host(`{{ .Values.ingressRoute.hostname }}`)
-        {{ if len .Values.ingressRoute.base.paths }}&& Path(`{{ join "`,`" .Values.ingressRoute.base.paths }}`){{- end }}
-        {{ if len .Values.ingressRoute.base.pathPrefixes }}&& PathPrefix(`{{ join "`,`" .Values.ingressRoute.base.pathPrefixes }}`){{- end }}
+        Host(`{{ .Values.ingressRoute.hostname }}`) && (
+          {{- $lastIndex := sub (len .Values.ingressRoute.rules) 1 -}}
+          {{- $rulesLength := len .Values.ingressRoute.rules -}}
+          {{- range $ruleIndex, $rule := .Values.ingressRoute.rules }}
+            {{- if gt $rulesLength 1 }} ( {{- end }}
 
-      {{- if len .Values.ingressRoute.middlewares }}
-      middlewares:
-        {{- range .Values.ingressRoute.middlewares }}
-        - name: {{ .name }}
-          namespace: '{{ if eq $.Values.environment "production" }}production{{ else }}staging{{ end }}'
-        {{- end }}
-      {{- end }}
+              {{- if not (empty $rule.Headers) }}
+                ({{ range $index, $key := keys $rule.Headers }} Headers(`{{ $key }}`,`{{ index $rule.Headers $key }}`) {{ if lt (add 1 $index) (len $rule.Headers) }}&&{{- end }} {{- end }})
+                {{- if or (not (empty $rule.HeadersRegexp)) (not (empty $rule.Methods)) (not (empty $rule.Paths)) (not (empty $rule.PathPrefixes)) (not (empty $rule.Queries)) (not (empty $rule.ClientIPs)) }}&&{{- end }}
+              {{- end }}
 
-      services:
-        - kind: Service
-          name: {{ .Release.Name }}
-          namespace: {{ .Release.Namespace }}
-          port: {{ .Values.service.port }}
-    {{- end }}
-    
-    {{ if or (len .Values.ingressRoute.admin.paths) (len .Values.ingressRoute.admin.pathPrefixes) }}
-    - kind: Rule
-      match: >
-        Host(`{{ .Values.ingressRoute.hostname }}`) 
-        {{ if len .Values.ingressRoute.admin.paths }}&& Path(`{{ join "`,`" .Values.ingressRoute.admin.paths }}`){{- end }}
-        {{ if len .Values.ingressRoute.admin.pathPrefixes }}&& PathPrefix(`{{ join "`,`" .Values.ingressRoute.admin.pathPrefixes }}`){{- end }}
+              {{- if not (empty $rule.HeadersRegexp) }}
+                ({{ range $index, $key := keys $rule.HeadersRegexp }} HeadersRegexp(`{{ $key }}`,`{{ index $rule.HeadersRegexp $key }}`) {{ if lt (add 1 $index) (len $rule.HeadersRegexp) }}&&{{- end }} {{- end }})
+                {{- if or (not (empty $rule.Methods)) (not (empty $rule.Paths)) (not (empty $rule.PathPrefixes)) (not (empty $rule.Queries)) (not (empty $rule.ClientIPs)) }}&&{{- end }}
+              {{- end }}
+
+              {{- if not (empty $rule.Methods) }}
+                Method({{- range $index, $method := $rule.Methods }}`{{ $method }}`{{ if lt (add 1 $index) (len $rule.Methods) }},{{- end }}{{- end }})
+                {{- if or (not (empty $rule.Paths)) (not (empty $rule.PathPrefixes)) (not (empty $rule.Queries)) (not (empty $rule.ClientIPs)) }}&&{{- end }}
+              {{- end }}
+
+              {{- if not (empty $rule.Paths) }}
+                Path({{- range $index, $path := $rule.Paths }}`{{ $path }}`{{ if lt (add 1 $index) (len $rule.Paths) }},{{- end }}{{- end }})
+                {{- if or (not (empty $rule.PathPrefixes)) (not (empty $rule.Queries)) (not (empty $rule.ClientIPs)) }}&&{{- end }}
+              {{- end }}
+
+              {{- if not (empty $rule.PathPrefixes) }}
+                PathPrefix({{- range $index, $pathPrefix := $rule.PathPrefixes }}`{{ $pathPrefix }}`{{ if lt (add 1 $index) (len $rule.PathPrefixes) }},{{- end }}{{- end }})
+                {{- if or (not (empty $rule.Queries)) (not (empty $rule.ClientIPs)) }}&&{{- end }}
+              {{- end }}
+
+              {{- if not (empty $rule.Queries) }}
+                Query({{ range $index, $key := keys $rule.Queries }}`{{ $key }}={{ index $rule.Queries $key }}`{{ if lt (add 1 $index) (len $rule.Queries) }},{{- end }} {{- end }})
+                {{- if or (not (empty $rule.ClientIPs)) }}&&{{- end }}
+              {{- end }}
+
+              {{- if not (empty $rule.ClientIPs) }}
+                ClientIP({{- range $index, $clientIP := $rule.ClientIPs }}`{{ $clientIP }}`{{ if lt (add 1 $index) (len $rule.ClientIPs) }},{{- end }}{{- end }})
+              {{- end }}
+
+            {{- if gt $rulesLength 1 }} ) {{- end }}
+            {{- if lt $ruleIndex $lastIndex }}||{{- end }}
+          {{- end }} ) 
 
       {{- if len .Values.ingressRoute.middlewares }}
       middlewares:

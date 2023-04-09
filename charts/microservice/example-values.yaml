@@ -10,7 +10,7 @@ image:
   repository: nginx
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "1.23"
+  tag: "1.23-alpine"
 
 imagePullSecrets: 
   - name: image-pull-secret
@@ -19,22 +19,38 @@ service:
   annotations:
     something: different
   type: ClusterIP
-  port: 8080
-  portName: ptth
+  port: 80
+  portName: http
 
 ingressRoute:
   enabled: true
   hostname: 'example.com'
   annotations: 
     something: else
-  base:
-    paths: 
-      - /path/to/resource
-    pathPrefixes: 
-      - /resources
-  admin:
-    paths: /path/to/admin/resources
-    pathPrefixes: /admin/resources
+  rules:
+    - Headers: # Map of key value pairs to match Headers on
+        'X-Something': else 
+        'X-Another': thing 
+      HeadersRegexp: # Map of key value pairs to regex match Headers on
+        'X-Regex': 'else*'
+        'X-Regex-Too': 'different*'
+      Methods: 
+        - GET
+        - POST
+      Paths: 
+        - /path/to/resource
+        - /path/to/different/resource
+      PathPrefixes: # Array of "Regexp Syntax" paths to match on
+        - /other/resources
+        - /others
+      Queries: # Map of key value pairs to match Query parameters on
+        page: 1
+        per_page: 10
+      ClientIPs: # Map of ClientIPs to match on
+        - '::1'
+        - '10.0.0.1'
+    - Paths:
+        - /path/to/my/resource
 
 resources: 
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -56,26 +72,26 @@ autoscaling:
   targetMemoryUtilizationPercentage: 60
 
 deployment:
-  container:
-    args: ["start"]
+  # container:
+    # args: ["start"]
 
   database:
     mongo:
       # Enabling MongoDB below will spin up extra resources to facilitate standard connection to a MongoDB Atlas instance.
       # This includes an ExternalSecret to retrieve the MongoDB connection string and environment variables for the deployment to allow the application to connect to it.
-      enabled: true
+      enabled: false
   
   cache:
-    enabled: true
+    enabled: false
 
   auth0:
     # Enabling MongoDB below will spin up extra resources to facilitate standard connection to a Auth0 application instance.
     # This includes an ExternalSecret to retrieve the Auth0 secrets and environment variables for the deployment to allow the application to connect to it.
-    enabled: true
+    enabled: false
 
   open-telemetry:
     # Enabling OpenTelemetry below will provide the internal URL environment variable to the deployment for the application to send traces to.
-    enabled: true
+    enabled: false
 
   config:
     # Log level (trace, debug, info, warn, error)
@@ -103,10 +119,8 @@ deployment:
     liveness: 
       httpGet:
         path: /
-        port: ptth
+        port: http
     readiness: 
-      exec:
-        command:
-        - cat
-        - /tmp/healthy
-      httpGet: {}
+      httpGet:
+        path: /
+        port: http
