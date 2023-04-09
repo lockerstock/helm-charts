@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feature/debug-publish-again
 
 jobs:
   build-and-publish:
@@ -44,7 +43,7 @@ jobs:
 
       - name: Chart Version Exists
         id: exists
-        uses: lockerstock/github-actions/package-has-version@feature/central-helm-deploy
+        uses: lockerstock/github-actions/package-has-version@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           package_name: helm-charts/${{ matrix.chart }}
