@@ -68,7 +68,7 @@ spec:
                   name: 'mongodb-{{ .Release.Name }}'
                   key: connectionString
             - name: MONGO_DATABASE
-              value: {{ trimSuffix "-api" .Chart.Name }}
+              value: {{ trimSuffix "-api" .Release.Name }}
             {{- end }}
 
             {{- if .Values.deployment.opentelemetry.enabled }}
