@@ -118,6 +118,29 @@ deployment:
   # https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container
   env: []
 
+  # Array of objects that configures kubernetes generic secrets to be created.
+  secrets: []
+    #   # Name of secret, will be prepended with {{ .Release.Name }}-
+    # - name: example 
+    #   # Yaml format annotations to apply to secret
+    #   annotations: {} 
+    #   # Type of secret to create: https://kubernetes.io/docs/concepts/configuration/secret/#secret-types
+    #   type: Opaque
+    #   # Boolean flag determine whether or not replicate secret to feature namespaces, or create a new secret entirely
+    #   replicate: true 
+    #   # Array of objects to define stringData entries
+    #   data: 
+    #       # Key of datum in secret
+    #     - key: thing-one
+    #       # Plain-text value of secret.
+    #       value: 'something'
+    #       # Boolean flag to instead randomly generate alphanumeric string
+    #       random: true
+    #       # Length of randomly generated string
+    #       length: 32
+    #       # Name of environment variable to apply the secret key to in the deployment's configuration
+    #       env: THING_TWO
+
   probes:
     # Each of the following will be applied verbatim as yaml to the deployment's probes.
     # Documentation available [here](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes).
