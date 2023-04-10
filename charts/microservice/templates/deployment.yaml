@@ -103,6 +103,18 @@ spec:
             {{- toYaml .Values.deployment.env | nindent 12 }}
             {{- end }}
 
+            {{- range $secretIndex, $secret := .Values.deployment.secrets }}
+            {{- range $datumIndex, $datum := $secret.data }}
+            {{- if not (empty $datum.env) }}
+            - name: {{ $datum.env }}
+              valueFrom:
+                secretKeyRef:
+                  name: '{{ $.Release.Name }}-{{ $secret.name }}'
+                  key: {{ $datum.key }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+
           livenessProbe:
             {{- toYaml .Values.deployment.probes.liveness | nindent 12 }}
           readinessProbe:
