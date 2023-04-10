@@ -6,7 +6,7 @@ metadata:
   labels:
     {{- include "microservice.labels" . | nindent 4 }}
   annotations:
-    {{ if eq .Values.environment "staging" }}
+    {{- if eq .Values.environment "staging" }}
     kube-external-sync.io/replicate-to-matching: lockerstock/feature-branch,!lockerstock/{{ .Release.Name }}
     kube-external-sync.io/top-level-domain: '*.feature.lockerstock.dev'
     {{- end }}

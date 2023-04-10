@@ -115,6 +115,32 @@ deployment:
     - name: PROFILES_API_ADDRESS
       value: http://profiles-api
 
+  secrets:
+    # Will be prepended with {{ .Release.Name }}. Uniqueness of secret name relies on configuration only.
+    - name: example
+      annotations: {}
+      type: kubernetes.io/dockerconfigjson
+      replicate: true
+      data:
+        - key: '.dockerconfigjson'
+          value: "{}"
+        - key: thing-one
+          value: 'something'
+          env: THING_ONE
+        - key: thing-two
+          random: true
+          length: 32
+          env: THING_TWO
+    - name: example-two
+      annotations: 
+        testing: annotation
+      replicate: false
+      data:
+        - key: thing-three
+          random: true
+          length: 105
+          env: THING_THREE
+
   probes:
     liveness: 
       httpGet:
