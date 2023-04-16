@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Auth0 External Secret references to GCP Secret Manager ([#8](https://github.com/lockerstock/helm-charts/pull/8))
+- Auth0 env variables populated into primary application deployment template ([#8](https://github.com/lockerstock/helm-charts/pull/8))
 - MongoDB External Secret references to GCP Secret Manager ([#8](https://github.com/lockerstock/helm-charts/pull/8))
 - MongoDB env variables populated into primary application deployment template ([#8](https://github.com/lockerstock/helm-charts/pull/8))
 

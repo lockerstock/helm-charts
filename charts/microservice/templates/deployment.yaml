@@ -88,17 +88,17 @@ spec:
             - name: AUTH0_DOMAIN
               valueFrom:
                 secretKeyRef:
-                  name: 'auth0-{{ .Release.Name }}'
+                  name: '{{- include "microservice.shortName" . }}-auth0'
                   key: AUTH0_DOMAIN
             - name: AUTH0_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: 'auth0-{{ .Release.Name }}'
+                  name: '{{- include "microservice.shortName" . }}-auth0'
                   key: AUTH0_CLIENT_ID
             - name: AUTH0_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: 'auth0-{{ .Release.Name }}'
+                  name: '{{- include "microservice.shortName" . }}-auth0'
                   key: AUTH0_CLIENT_SECRET
             {{- end }}
 
