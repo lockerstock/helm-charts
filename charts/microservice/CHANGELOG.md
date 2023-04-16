@@ -19,20 +19,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- New Secret generation and env variable reference template (#6)
+- New Secret generation and env variable reference template ([#6](https://github.com/lockerstock/helm-charts/pull/6))
 
 ## [v0.3.0] - BREAKING - 2023-04-09
 
 ### Changed
 
-- IngressRoute values template implementation for rules matching (#5)
+- IngressRoute values template implementation for rules matching ([#5](https://github.com/lockerstock/helm-charts/pull/5))
   - Far more robust and includes all available rules-based matching
 
 ## [v0.2.1] - 2023-04-08
 
 ### Fixed
 
-- Reference to cache enabling flag (#4)
+- Reference to cache enabling flag ([#4](https://github.com/lockerstock/helm-charts/pull/4))
 
 ## [v0.2.0] - 2023-04-08
 
@@ -44,7 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Auth0 External Secret template (#1)
-- Redis Cache Deployment and Service templates (#1)
-- MongoDB External Secret template (#1)
-- Primary Application Deployment, Service, HPA, and IngressRoute templates (#1)
+- Auth0 External Secret template ([#1](https://github.com/lockerstock/helm-charts/pull/1))
+- Redis Cache Deployment and Service templates ([#1](https://github.com/lockerstock/helm-charts/pull/1))
+- MongoDB External Secret template ([#1](https://github.com/lockerstock/helm-charts/pull/1))
+- Primary Application Deployment, Service, HPA, and IngressRoute templates ([#1](https://github.com/lockerstock/helm-charts/pull/1))
