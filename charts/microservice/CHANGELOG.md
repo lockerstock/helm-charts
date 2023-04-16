@@ -26,7 +26,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - IngressRoute values template implementation for rules matching ([#5](https://github.com/lockerstock/helm-charts/pull/5))
-  - Far more robust and includes all available rules-based matching
 
 ## [v0.2.1] - 2023-04-08
 
