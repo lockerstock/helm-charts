@@ -25,3 +25,6 @@ jobs:
 
       - name: Package Helm Chart
         run: helm package ./charts/${{ matrix.chart }}
+
+      - name: Template Helm Chart
+        run: helm template helm-charts ./charts/${{ matrix.chart }}
