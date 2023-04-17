@@ -15,6 +15,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [v0.5.0] - BREAKING - 2023-04-16
+
+> Must be deployed in tandem with [terraform-mongodb-database_user@0.2.0](https://github.com/lockerstock/terraform-mongodb-database_user/releases/tag/v0.2.0).
+
+### Fixed
+
+- Auth0 External Secret Key References ([#9](https://github.com/lockerstock/helm-charts/pull/9))
+
+### Removed
+
+- Unused MongoDB External Secret Key and primary application deployment env variables ([#9](https://github.com/lockerstock/helm-charts/pull/9))
+
 ## [v0.4.1] - 2023-04-16
 
 > Must be deployed in tandem with [terraform-mongodb-database_user@0.2.0-pre1](https://github.com/lockerstock/terraform-mongodb-database_user/releases/tag/v0.2.0-pre1).
