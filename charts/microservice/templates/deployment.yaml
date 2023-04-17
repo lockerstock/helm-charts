@@ -65,10 +65,20 @@ spec:
             - name: MONGO_CONNECTION_STRING
               valueFrom:
                 secretKeyRef:
-                  name: 'mongodb-{{ .Release.Name }}'
+                  name: '{{ .Release.Name }}-mongodb'
                   key: connectionString
             - name: MONGO_DATABASE
               value: {{ trimSuffix "-api" .Release.Name }}
+            - name: MONGO_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: '{{ .Release.Name }}-mongodb'
+                  key: db_password
+            - name: MONGO_SERVER_DOMAIN
+              valueFrom:
+                secretKeyRef:
+                  name: '{{ .Release.Name }}-mongodb'
+                  key: server_domain
             {{- end }}
 
             {{- if .Values.deployment.opentelemetry.enabled }}
@@ -85,17 +95,17 @@ spec:
             - name: AUTH0_DOMAIN
               valueFrom:
                 secretKeyRef:
-                  name: 'auth0-{{ .Release.Name }}'
+                  name: '{{ .Release.Name }}-auth0'
                   key: AUTH0_DOMAIN
             - name: AUTH0_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: 'auth0-{{ .Release.Name }}'
+                  name: '{{ .Release.Name }}-auth0'
                   key: AUTH0_CLIENT_ID
             - name: AUTH0_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: 'auth0-{{ .Release.Name }}'
+                  name: '{{ .Release.Name }}-auth0'
                   key: AUTH0_CLIENT_SECRET
             {{- end }}
 

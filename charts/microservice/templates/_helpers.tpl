@@ -1,4 +1,11 @@
 {{/*
+Short name of the release.
+*/}}
+{{- define "microservice.shortName" -}}
+{{- trimSuffix "-api" .Release.Name }}
+{{- end }}
+
+{{/*
 Expand the name of the chart.
 */}}
 {{- define "microservice.name" -}}
