@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [v0.4.1] - 2023-04-16
 
+> Must be deployed in tandem with [terraform-mongodb-database_user@0.2.0-pre1](https://github.com/lockerstock/terraform-mongodb-database_user/releases/tag/v0.2.0-pre1).
+
 ### Added
 
 - MongoDB External Secret references for `db_password` and `server_domain` ([#8](https://github.com/lockerstock/helm-charts/pull/8))
