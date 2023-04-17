@@ -15,14 +15,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-## [v0.5.0] - BREAKING- 2023-04-16
+## [v0.4.1] - 2023-04-16
+
+### Added
+
+- MongoDB External Secret references for `db_password` and `server_domain` ([#8](https://github.com/lockerstock/helm-charts/pull/8))
+- MongoDB env variables populated into primary application deployment template ([#8](https://github.com/lockerstock/helm-charts/pull/8))
 
 ### Changed
 
 - Auth0 External Secret references to GCP Secret Manager ([#8](https://github.com/lockerstock/helm-charts/pull/8))
 - Auth0 env variables populated into primary application deployment template ([#8](https://github.com/lockerstock/helm-charts/pull/8))
-- MongoDB External Secret references to GCP Secret Manager ([#8](https://github.com/lockerstock/helm-charts/pull/8))
-- MongoDB env variables populated into primary application deployment template ([#8](https://github.com/lockerstock/helm-charts/pull/8))
 
 ## [v0.4.0] - 2023-04-09
 
