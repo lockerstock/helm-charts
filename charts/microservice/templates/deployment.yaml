@@ -62,13 +62,6 @@ spec:
               value: {{ .Values.deployment.config.GIN_MODE }}
 
             {{- if .Values.deployment.database.mongo.enabled }}
-            - name: MONGO_CONNECTION_STRING
-              valueFrom:
-                secretKeyRef:
-                  name: '{{ .Release.Name }}-mongodb'
-                  key: connectionString
-            - name: MONGO_DATABASE
-              value: {{ trimSuffix "-api" .Release.Name }}
             - name: MONGO_DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
