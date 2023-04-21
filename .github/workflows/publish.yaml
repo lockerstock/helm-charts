@@ -33,10 +33,6 @@ jobs:
       - name: Login to Helm Registry
         run: echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ${{ env.registry }} --username ${{ github.actor }} --password-stdin
 
-      - name: Short Sha
-        id: short
-        uses: lockerstock/github-actions/get-short-sha@main
-
       - name: Get Chart Version
         id: chart
         run: echo "version=$(yq '.version' charts/${{ matrix.chart }}/Chart.yaml)" >> $GITHUB_OUTPUT
