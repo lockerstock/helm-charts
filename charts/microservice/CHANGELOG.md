@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [v0.5.1] - 2023-04-21
+
+### Fixed
+
+- OpenTelemetry Gateway Service Address ([#10](https://github.com/lockerstock/helm-charts/pull/10))
+
 ## [v0.5.0] - BREAKING - 2023-04-16
 
 > Must be deployed in tandem with [terraform-mongodb-database_user@0.2.0](https://github.com/lockerstock/terraform-mongodb-database_user/releases/tag/v0.2.0).
