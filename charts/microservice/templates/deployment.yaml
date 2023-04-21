@@ -76,7 +76,7 @@ spec:
 
             {{- if .Values.deployment.opentelemetry.enabled }}
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
-              value: eks-app-opentelemetry:4317
+              value: k8s-app-opentelemetry:4317
             {{- end }}
 
             {{- if .Values.deployment.cache.enabled }}
