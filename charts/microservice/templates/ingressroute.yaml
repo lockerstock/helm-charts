@@ -8,7 +8,6 @@ metadata:
   annotations:
     {{- if eq .Values.environment "staging" }}
     kube-external-sync.io/replicate-to-matching: lockerstock/feature-branch,!lockerstock/{{ .Release.Name }}
-    kube-external-sync.io/top-level-domain: '*.feature.lockerstock.dev'
     {{- end }}
     {{- with .Values.ingressRoute.annotations }}
     {{- toYaml . | nindent 4 }}
