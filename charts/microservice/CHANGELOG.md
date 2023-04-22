@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [v0.5.2] - 2023-04-21
+
+### Removed
+
+- `kube-external-sync.io/top-level-domain` annotation from ingressroute.yaml template ([#13](https://github.com/lockerstock/helm-charts/pull/13))
+
 ## [v0.5.1] - 2023-04-21
 
 ### Fixed
