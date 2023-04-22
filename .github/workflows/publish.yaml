@@ -85,5 +85,5 @@ jobs:
           artifacts: ${{ matrix.chart }}-${{ steps.chart.outputs.version }}.tgz
           replacesArtifacts: true
           prerelease: ${{ steps.changelog_reader.outputs.status == 'prereleased' }}
-          makeLatest: ${{ matrix.chart != "base-nginx" }}
+          makeLatest: ${{ matrix.chart != 'base-nginx' }}
           draft: false
