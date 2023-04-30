@@ -2,6 +2,28 @@ apiVersion: v1
 entries:
   base-nginx:
   - apiVersion: v2
+    appVersion: 1.23.4
+    created: "2023-04-30T20:43:02.822096506Z"
+    deprecated: true
+    description: A base nginx Helm chart intended for CI/CD pipeline testing purposes
+      only.
+    digest: 47eab5d8ed97a623df175e9d4ef000b6626aa3bcd944547628800ebfd83bb0b5
+    home: https://helm.lockerstock.io
+    icon: https://avatars.githubusercontent.com/u/71104575
+    keywords:
+    - nginx
+    maintainers:
+    - name: LockerStock
+      url: https://github.com/lockerstock
+    name: base-nginx
+    sources:
+    - https://github.com/lockerstock/helm-charts
+    - https://github.com/lockerstock/helm-charts/tree/main/charts/base-nginx
+    type: application
+    urls:
+    - https://helm.lockerstock.io/charts/base-nginx/base-nginx-v0.1.2.tgz
+    version: v0.1.2
+  - apiVersion: v2
     appVersion: 1.16.0
     created: "2023-04-30T17:02:08-05:00"
     description: A Helm chart for Kubernetes
@@ -93,4 +115,4 @@ entries:
     urls:
     - https://helm.lockerstock.io/charts/microservice/microservice-v0.1.0.tgz
     version: v0.1.0
-generated: "2023-04-30T14:41:59.833538111-05:00"
+generated: "2023-04-30T20:43:02.820652794Z"
