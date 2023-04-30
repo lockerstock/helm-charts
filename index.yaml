@@ -1,0 +1,106 @@
+apiVersion: v1
+entries:
+  base-nginx:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2023-04-30T14:01:26.527159321-05:00"
+    description: A Helm chart for Kubernetes
+    digest: 02471d1b79b87530b78c2fdb7bae175896e7b7ad08e6b31d05f64bca538a441b
+    name: base-nginx
+    type: application
+    urls:
+    - https://helm.lockerstock.io/charts/base-nginx/base-nginx-v0.1.1.tgz
+    version: v0.1.1
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2023-04-30T14:01:26.526476665-05:00"
+    description: A Helm chart for Kubernetes
+    digest: 71a8ef2a7754b5990c452cd098fbe95e4aa5d5e3e00850b02487fe136137efd0
+    name: base-nginx
+    type: application
+    urls:
+    - https://helm.lockerstock.io/charts/base-nginx/base-nginx-0.1.0.tgz
+    version: 0.1.0
+  microservice:
+  - apiVersion: v2
+    created: "2023-04-30T14:01:58.137336007-05:00"
+    description: A Helm chart for Kubernetes-based microservices
+    digest: 69bab9a4033524aaf193b6835cb62f7e1c03c88c6ab9283d19f9de500584332f
+    name: microservice
+    type: application
+    urls:
+    - https://helm.lockerstock.io/charts/microservice/microservice-v0.5.2.tgz
+    version: v0.5.2
+  - apiVersion: v2
+    created: "2023-04-30T14:01:58.136806602-05:00"
+    description: A Helm chart for Kubernetes-based microservices
+    digest: eaba86721b962785baadd4059e585c20fa56cc5417d1b4cf6f862fba6e11981d
+    name: microservice
+    type: application
+    urls:
+    - https://helm.lockerstock.io/charts/microservice/microservice-v0.5.1.tgz
+    version: v0.5.1
+  - apiVersion: v2
+    created: "2023-04-30T14:01:58.136339158-05:00"
+    description: A Helm chart for Kubernetes-based microservices
+    digest: dcc9e6f19cbc02e52986d128af632c95c2305c8d1a5626ad33dc2d153a92bf41
+    name: microservice
+    type: application
+    urls:
+    - https://helm.lockerstock.io/charts/microservice/microservice-v0.5.0.tgz
+    version: v0.5.0
+  - apiVersion: v2
+    created: "2023-04-30T14:01:58.135880894-05:00"
+    description: A Helm chart for Kubernetes-based microservices
+    digest: eda56c86196790529f549e44b6a69312720a7ff880f5fe8d9d952883bb32160e
+    name: microservice
+    type: application
+    urls:
+    - https://helm.lockerstock.io/charts/microservice/microservice-v0.4.1.tgz
+    version: v0.4.1
+  - apiVersion: v2
+    created: "2023-04-30T14:01:58.135398819-05:00"
+    description: A Helm chart for Kubernetes-based microservices
+    digest: 50bf179f55a01644c1e67bbb4e9bfc0719ef090ac0bd31c9dc78bb55c2bc077b
+    name: microservice
+    type: application
+    urls:
+    - https://helm.lockerstock.io/charts/microservice/microservice-v0.4.0.tgz
+    version: v0.4.0
+  - apiVersion: v2
+    created: "2023-04-30T14:01:58.134941275-05:00"
+    description: A Helm chart for Kubernetes-based microservices
+    digest: 7c2193402f579f22a213433dff8240a90a2e71d2ebdc67a29bc5bcd3a49f5e01
+    name: microservice
+    type: application
+    urls:
+    - https://helm.lockerstock.io/charts/microservice/microservice-v0.3.0.tgz
+    version: v0.3.0
+  - apiVersion: v2
+    created: "2023-04-30T14:01:58.134464461-05:00"
+    description: A Helm chart for Kubernetes-based microservices
+    digest: 5984089c8e50845359d76d99883454d47b55b441c7b6d4b6757d09c28517394a
+    name: microservice
+    type: application
+    urls:
+    - https://helm.lockerstock.io/charts/microservice/microservice-v0.2.1.tgz
+    version: v0.2.1
+  - apiVersion: v2
+    created: "2023-04-30T14:01:58.133900786-05:00"
+    description: A Helm chart for Kubernetes-based microservices
+    digest: bd12b27ae2f5d77e209ec2127b60ff68acb8402b29daa7e23e3835ca7a7dc30d
+    name: microservice
+    type: application
+    urls:
+    - https://helm.lockerstock.io/charts/microservice/microservice-v0.2.0.tgz
+    version: v0.2.0
+  - apiVersion: v2
+    created: "2023-04-30T14:01:58.132629955-05:00"
+    description: A Helm chart for Kubernetes-based microservices
+    digest: 58916308e7b90566a0bf57449e415199168768aaaab9f1c9ab5aa0cb4cb3b90b
+    name: microservice
+    type: application
+    urls:
+    - https://helm.lockerstock.io/charts/microservice/microservice-v0.1.0.tgz
+    version: v0.1.0
+generated: "2023-04-30T14:02:09.729326757-05:00"
