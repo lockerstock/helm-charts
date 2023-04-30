@@ -10,10 +10,11 @@ jobs:
     name: Build and Publish Helm Chart
     runs-on: ubuntu-latest
     strategy:
+      max-parallel: 1
       matrix:
         chart:
-          - microservice
           - base-nginx
+          - microservice
 
     env:
       registry: ghcr.io
@@ -56,6 +57,8 @@ jobs:
         if: steps.exists.outputs.version_exists == 'false'
         run: helm push ${{ matrix.chart }}-${{ steps.chart.outputs.version }}.tgz oci://${{ env.gcr_image }}
 
+      ###### Auto-tag and release chart ######
+
       - name: Get Changelog Entry
         id: changelog_reader
         if: steps.exists.outputs.version_exists == 'false'
@@ -63,6 +66,7 @@ jobs:
         with:
           validation_level: warn
           path: ./charts/${{ matrix.chart }}/CHANGELOG.md
+          version: steps.chart.outputs.version
 
       - name: Bump version and push tag
         id: tag_version
@@ -87,3 +91,31 @@ jobs:
           prerelease: ${{ steps.changelog_reader.outputs.status == 'prereleased' }}
           makeLatest: ${{ matrix.chart != 'base-nginx' }}
           draft: false
+
+      ###### Update gh-pages branch with newest package release ######
+
+      - name: Checkout gh-pages branch
+        if: steps.exists.outputs.version_exists == 'false'
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Merge Helm Package into existing index
+        if: steps.exists.outputs.version_exists == 'false'
+        run: |
+          helm repo index . --merge gh-pages/index.yaml --url https://helm.lockerstock.io/charts/${{ matrix.chart }}
+
+      - name: Move Helm Package and index into gh-pages
+        if: steps.exists.outputs.version_exists == 'false'
+        run: |
+          mv index.yaml gh-pages/
+          mv ${{ matrix.chart }}-${{ steps.chart.outputs.version }}.tgz gh-pages/charts/${{ matrix.chart }}/
+
+      - name: Push changes to gh-pages
+        if: steps.exists.outputs.version_exists == 'false'
+        uses: EndBug/add-and-commit@v9
+        with:
+          cwd: gh-pages
+          message: Release ${{ matrix.chart }}@${{ steps.chart.outputs.version }}
