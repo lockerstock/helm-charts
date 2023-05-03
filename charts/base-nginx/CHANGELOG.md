@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [v0.1.3] - 2023-05-03
+
+### Added
+
+- README.md publishing process for gh-pages deployment.
+
 ## [v0.1.2] - 2023-04-20
 
 ### Added
