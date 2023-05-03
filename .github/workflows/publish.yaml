@@ -119,7 +119,7 @@ jobs:
         with:
           source: README.md
           output: gh-pages/index.html
-          github-corners: https://github.com/jaywcjlove/markdown-to-html-cli
+          dark-mode: false
 
       - name: Push changes to gh-pages
         if: steps.exists.outputs.version_exists == 'false'
