@@ -113,6 +113,13 @@ jobs:
           mv index.yaml gh-pages/
           mv ${{ matrix.chart }}-${{ steps.chart.outputs.version }}.tgz gh-pages/charts/${{ matrix.chart }}/
 
+      - name: Converts Markdown to HTML
+        uses: jaywcjlove/markdown-to-html-cli@main
+        with:
+          source: README.md
+          output: gh-pages/index.html
+          github-corners: https://github.com/jaywcjlove/markdown-to-html-cli
+
       - name: Push changes to gh-pages
         if: steps.exists.outputs.version_exists == 'false'
         uses: EndBug/add-and-commit@v9
