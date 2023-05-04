@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'charts/**/*'
 
 jobs:
   build-and-publish:
@@ -112,14 +114,6 @@ jobs:
         run: |
           mv index.yaml gh-pages/
           mv ${{ matrix.chart }}-${{ steps.chart.outputs.version }}.tgz gh-pages/charts/${{ matrix.chart }}/
-
-      - name: Converts Markdown to HTML
-        if: steps.exists.outputs.version_exists == 'false'
-        uses: jaywcjlove/markdown-to-html-cli@main
-        with:
-          source: README.md
-          output: gh-pages/index.html
-          dark-mode: false
 
       - name: Push changes to gh-pages
         if: steps.exists.outputs.version_exists == 'false'
