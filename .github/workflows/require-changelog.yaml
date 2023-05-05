@@ -55,7 +55,7 @@ jobs:
             echo "matches=true" >> $GITHUB_OUTPUT
           else
             echo "matches=false" >> $GITHUB_OUTPUT
-            echo "version-line=$(yq '.version | line' charts/${{ matrix.chart }}/Chart.yaml)"
+            echo "version-line=$(yq '.version | line' charts/${{ matrix.chart }}/Chart.yaml)" >> $GITHUB_OUTPUT
           fi
 
       - name: Print error if Chart.yaml version doesn't match changelog version
