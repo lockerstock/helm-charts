@@ -38,7 +38,7 @@ jobs:
 
       - name: Prepare Tag
         id: prepared
-        run: echo "tag=${{ matrix.chart }}@${{ steps.chart.outputs.version }}"
+        run: echo "tag=${{ matrix.chart }}@${{ steps.chart.outputs.version }}" >> $GITHUB_OUTPUT
 
       - name: Check if tag already exists
         uses: lockerstock/github-actions/git-tag-exists@main
