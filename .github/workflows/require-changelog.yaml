@@ -62,6 +62,7 @@ jobs:
         if: steps.chart.outputs.matches == 'false'
         run: |
           echo "::error file=charts/${{ matrix.chart }}/Chart.yaml,line=${{ steps.chart.outputs.version-line }}::Chart version does not match to-be-released changelog entry. Please update the chart version before merging this pull request."
+          exit 1
 
       ###### Check if Unreleased section has new entry ######
 
@@ -104,7 +105,4 @@ jobs:
         if: steps.unreleased.outputs.changed == 'false'
         run: |
           echo "::error file=charts/${{ matrix.chart }}/CHANGELOG.md::Changelog does not include a new version or unreleased entry. Please add an entry before merging this pull request."
-
-      - name: Error if failure
-        if: steps.chart.outputs.matches == 'false' || steps.unreleased.outputs.changed == 'false'
-        run: exit 1
+          exit 1
