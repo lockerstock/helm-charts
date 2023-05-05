@@ -1,60 +1,5 @@
 apiVersion: v1
 entries:
-  base-nginx:
-  - apiVersion: v2
-    appVersion: 1.23.4
-    created: "2023-05-03T20:05:44.780431007Z"
-    deprecated: true
-    description: A base nginx Helm chart intended for CI/CD pipeline testing purposes
-      only.
-    digest: c69ce098a60e835d1933a75b0d8921128dc738b4258c4801f68a9c74fb34d72c
-    home: https://helm.lockerstock.io
-    icon: https://avatars.githubusercontent.com/u/71104575
-    keywords:
-    - nginx
-    maintainers:
-    - name: LockerStock
-      url: https://github.com/lockerstock
-    name: base-nginx
-    sources:
-    - https://github.com/lockerstock/helm-charts
-    - https://github.com/lockerstock/helm-charts/tree/main/charts/base-nginx
-    type: application
-    urls:
-    - https://helm.lockerstock.io/charts/base-nginx/base-nginx-v0.1.3.tgz
-    version: v0.1.3
-  - apiVersion: v2
-    appVersion: 1.23.4
-    created: "2023-04-30T20:43:02.822096506Z"
-    deprecated: true
-    description: A base nginx Helm chart intended for CI/CD pipeline testing purposes
-      only.
-    digest: 47eab5d8ed97a623df175e9d4ef000b6626aa3bcd944547628800ebfd83bb0b5
-    home: https://helm.lockerstock.io
-    icon: https://avatars.githubusercontent.com/u/71104575
-    keywords:
-    - nginx
-    maintainers:
-    - name: LockerStock
-      url: https://github.com/lockerstock
-    name: base-nginx
-    sources:
-    - https://github.com/lockerstock/helm-charts
-    - https://github.com/lockerstock/helm-charts/tree/main/charts/base-nginx
-    type: application
-    urls:
-    - https://helm.lockerstock.io/charts/base-nginx/base-nginx-v0.1.2.tgz
-    version: v0.1.2
-  - apiVersion: v2
-    appVersion: 1.16.0
-    created: "2023-04-30T17:02:08-05:00"
-    description: A Helm chart for Kubernetes
-    digest: 02471d1b79b87530b78c2fdb7bae175896e7b7ad08e6b31d05f64bca538a441b
-    name: base-nginx
-    type: application
-    urls:
-    - https://helm.lockerstock.io/charts/base-nginx/base-nginx-v0.1.1.tgz
-    version: v0.1.1
   microservice:
   - apiVersion: v2
     created: "2023-05-05T02:49:59.654138943Z"
@@ -179,4 +124,4 @@ entries:
     urls:
     - https://helm.lockerstock.io/charts/microservice/microservice-v0.1.0.tgz
     version: v0.1.0
-generated: "2023-05-05T02:49:59.652907668Z"
+generated: "2023-05-04T21:51:37.202212255-05:00"
