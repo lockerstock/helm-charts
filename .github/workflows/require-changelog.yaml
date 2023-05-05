@@ -1,0 +1,108 @@
+name: Require CHANGELOG
+
+on:
+  pull_request:
+
+jobs:
+  require-changelog:
+    name: Require CHANGELOG Entry
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chart:
+          - microservice
+
+    steps:
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            chart:
+              - 'charts/${{ matrix.chart }}/**/*'
+
+      - name: Checkout
+        if: steps.changes.outputs.chart == 'true'
+        uses: actions/checkout@v3
+
+      ###### Check if latest tag in changelog has matching tag in repository ######
+
+      - name: Get Changelog Entry
+        if: steps.changes.outputs.chart == 'true'
+        id: changelog_reader
+        uses: mindsers/changelog-reader-action@v2
+        with:
+          validation_level: none
+          path: ./charts/${{ matrix.chart }}/CHANGELOG.md
+
+      - name: Check if tag already exists
+        if: steps.changes.outputs.chart == 'true'
+        uses: lockerstock/github-actions/git-tag-exists@main
+        id: tag
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ matrix.chart }}@${{ steps.changelog_reader.outputs.version }}
+
+      ##### Check if new changelog version entry matches Chart.yaml #####
+
+      - name: Get Chart Version
+        if: steps.changes.outputs.chart == 'true' && steps.tag.outputs.exists == 'false'
+        id: chart
+        run: |
+          VERSION=$(yq '.version' charts/${{ matrix.chart }}/Chart.yaml)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+          if [ "$VERSION" = "${{ steps.changelog_reader.outputs.version }}" ]; then
+            echo "matches=true" >> $GITHUB_OUTPUT
+          else
+            echo "matches=false" >> $GITHUB_OUTPUT
+            echo "version-line=$(yq '.version | line' charts/${{ matrix.chart }}/Chart.yaml)" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Print error if Chart.yaml version doesn't match changelog version
+        if: steps.chart.outputs.matches == 'false'
+        run: |
+          echo "::error file=charts/${{ matrix.chart }}/Chart.yaml,line=${{ steps.chart.outputs.version-line }}::Chart version does not match to-be-released changelog entry. Please update the chart version before merging this pull request."
+          exit 1
+
+      ###### Check if Unreleased section has new entry ######
+
+      - name: Checkout default branch
+        if: steps.changes.outputs.chart == 'true' && steps.tag.outputs.exists == 'true'
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          path: default-branch
+
+      - name: Get current Unreleased changelog entry
+        if: steps.changes.outputs.chart == 'true' && steps.tag.outputs.exists == 'true'
+        id: current-unreleased
+        uses: mindsers/changelog-reader-action@v2
+        with:
+          validation_level: none
+          path: ./charts/${{ matrix.chart }}/CHANGELOG.md
+          version: Unreleased
+
+      - name: Get default branch Unreleased changelog entry
+        if: steps.changes.outputs.chart == 'true' && steps.tag.outputs.exists == 'true'
+        id: default-unreleased
+        uses: mindsers/changelog-reader-action@v2
+        with:
+          validation_level: none
+          path: default-branch/charts/${{ matrix.chart }}/CHANGELOG.md
+          version: Unreleased
+
+      - name: Check for "Unreleased" Changes
+        if: steps.changes.outputs.chart == 'true' && steps.tag.outputs.exists == 'true'
+        id: unreleased
+        run: |
+          if [ "${{ steps.current-unreleased.outputs.changes }}" = "${{ steps.default-unreleased.outputs.changes }}" ]; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Print error if "Unreleased" is unchanged
+        if: steps.unreleased.outputs.changed == 'false'
+        run: |
+          echo "::error file=charts/${{ matrix.chart }}/CHANGELOG.md::Changelog does not include a new version or unreleased entry. Please add an entry before merging this pull request."
+          exit 1
