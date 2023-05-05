@@ -15,12 +15,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-## [v0.5.4] - 2023-05-04
-
-### Fixed
-
-- Base deployment container tag so unchanged releases can be installed. (`nginx:staging` -> `nginx:latest`)
-
 ## [v0.5.3] - 2023-04-20
 
 ### Added
