@@ -58,10 +58,10 @@ jobs:
             echo "version-line=$(yq '.version | line' charts/${{ matrix.chart }}/Chart.yaml)"
           fi
 
-      - name: Error if no changes
+      - name: Print error if Chart.yaml version doesn't match changelog version
         if: steps.chart.outputs.matches == 'false'
         run: |
-          echo "::error file charts/${{ matrix.chart }}/Chart.yaml,line=${{ steps.chart.output.version-line }}::Chart version does not match to-be-released changelog entry. Please update the chart version before merging this pull request."
+          echo "::error file=charts/${{ matrix.chart }}/Chart.yaml,line=${{ steps.chart.outputs.version-line }}::Chart version does not match to-be-released changelog entry. Please update the chart version before merging this pull request."
 
       ###### Check if Unreleased section has new entry ######
 
@@ -103,7 +103,7 @@ jobs:
       - name: Print error if "Unreleased" is unchanged
         if: steps.unreleased.outputs.changed == 'false'
         run: |
-          echo "::error file charts/${{ matrix.chart }}/CHANGELOG.md::Changelog does not include a new version or unreleased entry. Please add an entry before merging this pull request."
+          echo "::error file=charts/${{ matrix.chart }}/CHANGELOG.md::Changelog does not include a new version or unreleased entry. Please add an entry before merging this pull request."
 
       - name: Error if failure
         if: steps.chart.outputs.matches == 'false' || steps.unreleased.outputs.changed == 'false'
