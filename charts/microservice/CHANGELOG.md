@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [v0.5.5] - 2023-05-06
+
+### Fixed
+
+- Population of liveness/readiness probes into deployment.yaml when not provided.
+
 ## [v0.5.4] - 2023-05-04
 
 ### Fixed
