@@ -118,9 +118,15 @@ spec:
             {{- end }}
             {{- end }}
 
+          {{- if not (empty .Values.deployment.probes.liveness) }}
           livenessProbe:
             {{- toYaml .Values.deployment.probes.liveness | nindent 12 }}
+          {{- end }}
+          {{- if not (empty .Values.deployment.probes.readiness) }}
           readinessProbe:
             {{- toYaml .Values.deployment.probes.readiness | nindent 12 }}
+          {{- end }}
+          {{- if not (empty .Values.resources) }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          {{- end }}
