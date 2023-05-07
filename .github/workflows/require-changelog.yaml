@@ -14,7 +14,15 @@ jobs:
           - microservice
 
     steps:
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            chart:
+              - 'charts/${{ matrix.chart }}/**/*'
+
       - name: Require Changelog Entry
+        if: steps.changes.outputs.chart == 'true'
         id: changelog
         uses: lockerstock/github-actions/require-changelog-entry@main
         with:
