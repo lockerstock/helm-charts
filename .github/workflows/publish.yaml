@@ -38,7 +38,6 @@ jobs:
         run: echo "version=$(yq '.version' charts/${{ matrix.chart }}/Chart.yaml)" >> $GITHUB_OUTPUT
 
       - name: Package Helm Chart
-        if: steps.tag.outputs.exists == 'false'
         run: helm package ./charts/${{ matrix.chart }}
 
       ###### Tag and release Helm Chart ######
@@ -57,17 +56,14 @@ jobs:
       ###### Publish Helm Chart to GitHub Container Registry ######
 
       - name: Login to Helm Registry
-        if: steps.tag.outputs.exists == 'false'
         run: echo ${{ secrets.GITHUB_TOKEN }} | helm registry login ${{ env.registry }} --username ${{ github.actor }} --password-stdin
 
       - name: Publish Chart to Container Registry
-        if: steps.tag.outputs.exists == 'false'
         run: helm push ${{ matrix.chart }}-${{ steps.chart.outputs.version }}.tgz oci://${{ env.gcr_image }}
 
       ###### Update gh-pages branch with newest package release ######
 
       - name: Checkout gh-pages branch
-        if: steps.tag.outputs.exists == 'false'
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -75,18 +71,15 @@ jobs:
           path: gh-pages
 
       - name: Merge Helm Package into existing index
-        if: steps.tag.outputs.exists == 'false'
         run: |
           helm repo index . --merge gh-pages/index.yaml --url https://helm.lockerstock.io/charts/${{ matrix.chart }}
 
       - name: Move Helm Package and index into gh-pages
-        if: steps.tag.outputs.exists == 'false'
         run: |
           mv index.yaml gh-pages/
           mv ${{ matrix.chart }}-${{ steps.chart.outputs.version }}.tgz gh-pages/charts/${{ matrix.chart }}/
 
       - name: Push changes to gh-pages
-        if: steps.tag.outputs.exists == 'false'
         uses: EndBug/add-and-commit@v9
         with:
           cwd: gh-pages
