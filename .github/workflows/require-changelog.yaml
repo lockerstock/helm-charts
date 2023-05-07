@@ -24,7 +24,7 @@ jobs:
       - name: Require Changelog Entry
         if: steps.changes.outputs.chart == 'true'
         id: changelog
-        uses: lockerstock/github-actions/require-changelog-entry@main
+        uses: lockerstock/github-actions/require-changelog-entry@feature/fix-require-changelog
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           changelog_path: charts/${{ matrix.chart }}/CHANGELOG.md
