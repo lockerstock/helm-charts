@@ -19,26 +19,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `deployment.config.enabled` field defaulted to `true` to allow disabling of the config block being added as environment variables to the deployment.
+- `deployment.config.enabled` field defaulted to `true` to allow disabling of the config block being added as environment variables to the deployment. ([#19](https://github.com/lockerstock/helm-charts/pull/19))
   - This field be updated to default as `false` once all Go microservices have migrated to explicitly setting it to `true`.
 
 ## [v0.5.5] - 2023-05-06
 
 ### Fixed
 
-- Population of liveness/readiness probes into deployment.yaml when not provided.
+- Population of liveness/readiness probes into deployment.yaml when not provided. ([#18](https://github.com/lockerstock/helm-charts/pull/18))
 
 ## [v0.5.4] - 2023-05-04
 
 ### Fixed
 
-- Base deployment container tag so unchanged releases can be installed. (`nginx:staging` -> `nginx:latest`)
+- Base deployment container tag so unchanged releases can be installed (`nginx:staging` -> `nginx:latest`). ([#17](https://github.com/lockerstock/helm-charts/pull/17))
 
 ## [v0.5.3] - 2023-04-20
 
 ### Added
 
-- `Chart.yaml` configuration information.
+- `Chart.yaml` configuration information. ([#14](https://github.com/lockerstock/helm-charts/pull/14))
 
 ## [v0.5.2] - 2023-04-21
 
