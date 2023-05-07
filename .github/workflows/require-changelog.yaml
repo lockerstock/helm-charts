@@ -34,6 +34,7 @@ jobs:
       ##### Check if new changelog version entry matches Chart.yaml #####
 
       - name: Checkout
+        if: steps.changelog.outputs.has_new_version == 'true'
         uses: actions/checkout@v3
 
       - name: Get Chart Version
