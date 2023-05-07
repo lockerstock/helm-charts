@@ -9,14 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `deployment.config.enabled` field defaulted to `true` to allow disabling of the config block being added as environment variables to the deployment.
-  - This field be updated to default as `false` once all Go microservices have migrated to explicitly setting it to `true`.
-
 ### Fixed
 
 ### Changed
 
 ### Removed
+
+## [v0.5.6] - 2023-05-07
+
+### Added
+
+- `deployment.config.enabled` field defaulted to `true` to allow disabling of the config block being added as environment variables to the deployment.
+  - This field be updated to default as `false` once all Go microservices have migrated to explicitly setting it to `true`.
 
 ## [v0.5.5] - 2023-05-06
 
