@@ -44,7 +44,7 @@ jobs:
           VERSION=$(yq '.version' charts/${{ matrix.chart }}/Chart.yaml)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-          if [ "$VERSION" = "${{ steps.changelog_reader.outputs.version }}" ]; then
+          if [ "$VERSION" = "${{ steps.changelog.outputs.changelog_latest_version }}" ]; then
             echo "matches=true" >> $GITHUB_OUTPUT
           else
             echo "matches=false" >> $GITHUB_OUTPUT
