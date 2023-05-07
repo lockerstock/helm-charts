@@ -26,7 +26,7 @@ jobs:
         id: changelog
         uses: lockerstock/github-actions/require-changelog-entry@main
         with:
-          token: ${{ secret.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           changelog_path: charts/${{ matrix.chart }}/CHANGELOG.md
           tag_prefix: "${{ matrix.chart }}@"
           error_on_missing: true
