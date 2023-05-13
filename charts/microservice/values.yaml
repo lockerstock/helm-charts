@@ -103,8 +103,7 @@ deployment:
 
   config:
     # Enables the below configurations to be applied as environment variables to the main deployment pod. The below configurations are primarily for Go microservices.
-    # This value is currently defaulted to 'true' for backwards compatibility, but will be changed to 'false' once all Go microservices have migrated to manually set it to 'true'. 
-    enabled: true
+    enabled: false
     
     # Log level (trace, debug, info, warn, error)
     LOG_LEVEL: 'info'
