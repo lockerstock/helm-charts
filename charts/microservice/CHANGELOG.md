@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [v0.6.0] - 2023-05-12
+
+### Changed
+
+- `deployment.config.enabled` default value to `false` (https://github.com/lockerstock/helm-charts/pull/20)
+
 ## [v0.5.6] - 2023-05-07
 
 ### Added
