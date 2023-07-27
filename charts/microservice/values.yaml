@@ -27,7 +27,29 @@ ingressRoute:
   hostname: ''
   annotations: {}
   middlewares:
-    - name: response-headers
+    - name: secured-chain
+
+  # `rules` represents an array of objects that will be built into Traefik IngressRoute rules. More information [here](https://doc.traefik.io/traefik/routing/routers/#rule).
+  # Each index in the array will be used to create a unique ANDed ruleset where all key/value pairs represent a portion of a single rule.
+  # The entirety of the array represent a series of rules that or ORed together.
+  # The entire array is then ANDed against the given hostname above.
+  # It is recommended to be as precise as possible with rules so the matching algorithm is reliable.
+  rules: []
+    # - Headers: {} # Map of key value pairs to match Headers on
+    #   HeadersRegexp: {} # Map of key value pairs to regex match Headers on
+    #   Methods: [] # Array of HTTP methods
+    #   Paths: [] # Array of full paths to match on
+    #   PathPrefixes: [] # Array of "Regexp Syntax" paths to match on
+    #   Queries: {} # Map of key value pairs to match Query parameters on
+    #   ClientIPs: [] # Map of ClientIPs to match on
+
+internalIngressRoute:
+  enabled: false
+  # Recommended value for `hostname` is the environment variable template variable of $HOSTNAME so it can be resolved and replaced during deployment.
+  hostname: ''
+  annotations: {}
+  middlewares:
+    - name: internal-only
 
   # `rules` represents an array of objects that will be built into Traefik IngressRoute rules. More information [here](https://doc.traefik.io/traefik/routing/routers/#rule).
   # Each index in the array will be used to create a unique ANDed ruleset where all key/value pairs represent a portion of a single rule.
