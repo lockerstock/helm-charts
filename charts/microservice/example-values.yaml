@@ -123,6 +123,15 @@ deployment:
     # Enabling OpenTelemetry below will provide the internal URL environment variable to the deployment for the application to send traces to.
     enabled: false
 
+  routing:
+    # Enabling routing below will append the strategy-corresponding environment variables to the deployment to facilitate inter-service routing.
+    enabled: true
+    
+    # Available routing strategies
+    # - loadbalancer: Appends the `LOAD_BALANCER_ADDRESS` environment variable to the deployment. 
+    #                 Should only be chosen for services that are capable of routing via load balancer (i.e send requests to the provided address and append `Host` header to determine destination)
+    strategy: 'loadbalancer'
+
   config:
     # Enables the below configurations to be applied as environment variables to the main deployment pod. The below configurations are primarily for Go microservices.
     # This value is currently defaulted to 'true' for backwards compatibility, but will be changed to 'false' once all Go microservices have migrated to manually set it to 'true'. 
