@@ -34,10 +34,10 @@ ingressRoute:
       HeadersRegexp: # Map of key value pairs to regex match Headers on
         'X-Regex': 'else*'
         'X-Regex-Too': 'different*'
-      Methods: 
+      Methods: # Array of HTTP methods
         - GET
         - POST
-      Paths: 
+      Paths: # Array of full paths to match on
         - /path/to/resource
         - /path/to/different/resource
       PathPrefixes: # Array of "Regexp Syntax" paths to match on
@@ -49,8 +49,12 @@ ingressRoute:
       ClientIPs: # Map of ClientIPs to match on
         - '::1'
         - '10.0.0.1'
-    - Paths:
-        - /path/to/my/resource
+      middlewares:  # Array of Traefik Middleware resource names. Use `secured-chain` for external rules and `internal-only` for internal rules.
+        - secured-chain
+    - Paths: # Array of full paths to match on
+        - /path/to/my/private/resource
+      middlewares: # Array of Traefik Middleware resource names. Use `secured-chain` for external rules and `internal-only` for internal rules.
+        - internal-only
 
 resources: 
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -92,6 +96,15 @@ deployment:
   open-telemetry:
     # Enabling OpenTelemetry below will provide the internal URL environment variable to the deployment for the application to send traces to.
     enabled: false
+
+  routing:
+    # Enabling routing below will append the strategy-corresponding environment variables to the deployment to facilitate inter-service routing.
+    enabled: true
+    
+    # Available routing strategies
+    # - loadbalancer: Appends the `LOAD_BALANCER_ADDRESS` environment variable to the deployment. 
+    #                 Should only be chosen for services that are capable of routing via load balancer (i.e send requests to the provided address and append `Host` header to determine destination)
+    strategy: 'loadbalancer'
 
   config:
     # Enables the below configurations to be applied as environment variables to the main deployment pod. The below configurations are primarily for Go microservices.

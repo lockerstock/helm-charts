@@ -9,11 +9,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Deprecated
+
+### Removed
+
 ### Fixed
+
+### Security
+
+## [v0.7.0] - 2023-07-28
+
+### Added
+
+- `.Values.deployment.routing` object that controls how network routing is performed. The default and only supported value for `strategy` is `loadbalancer` which expects services to direct requests with custom `Host` header at the Traefik LoadBalancer and allow it to use configured IngressRoutes to route the request. (https://github.com/lockerstock/helm-charts/pull/21).
+  - The `loadbalancer` strategy appends the `LOAD_BALANCER_ADDRESS` environment variable to the deployment which can be used to make internal requests to.
 
 ### Changed
 
-### Removed
+- The `.Values.ingressRoute.rules` array will now create a separate `Rule` in the final IngressRoute for each index (https://github.com/lockerstock/helm-charts/pull/21).
+- Moved `.Values.ingressRoute.middlewares` to be part of `.Values.ingressRoute.rules` objects which plays better with the above change (https://github.com/lockerstock/helm-charts/pull/21).
 
 ## [v0.6.0] - 2023-05-12
 

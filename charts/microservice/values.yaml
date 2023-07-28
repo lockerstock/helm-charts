@@ -26,13 +26,11 @@ ingressRoute:
   # Recommended value for `hostname` is the environment variable template variable of $HOSTNAME so it can be resolved and replaced during deployment.
   hostname: ''
   annotations: {}
-  middlewares:
-    - name: response-headers
 
   # `rules` represents an array of objects that will be built into Traefik IngressRoute rules. More information [here](https://doc.traefik.io/traefik/routing/routers/#rule).
-  # Each index in the array will be used to create a unique ANDed ruleset where all key/value pairs represent a portion of a single rule.
-  # The entirety of the array represent a series of rules that or ORed together.
-  # The entire array is then ANDed against the given hostname above.
+  # All keys in PascalCase represent the string templating of the Rule matching string. The given keys in an object will be OR'd together then AND'd against the provided hostname above.
+  # All keys in camelCase represent the other members of a Rule and will be applied as such to each one.
+  # Each object in the array below will represent an individual Rule in the final IngressRoute generated.
   # It is recommended to be as precise as possible with rules so the matching algorithm is reliable.
   rules: []
     # - Headers: {} # Map of key value pairs to match Headers on
@@ -41,7 +39,8 @@ ingressRoute:
     #   Paths: [] # Array of full paths to match on
     #   PathPrefixes: [] # Array of "Regexp Syntax" paths to match on
     #   Queries: {} # Map of key value pairs to match Query parameters on
-    #   ClientIPs: [] # Map of ClientIPs to match on
+    #   ClientIPs: [] # Array of ClientIPs to match on
+    #   middlewares: [] # Array of Traefik Middleware resource names. Use `secured-chain` for external rules and `internal-only` for internal rules.
 
 resources:
   requests:
@@ -100,6 +99,15 @@ deployment:
   opentelemetry:
     # Enabling OpenTelemetry below will provide the internal URL environment variable to the deployment for the application to send traces to.
     enabled: false
+
+  routing:
+    # Enabling routing below will append the strategy-corresponding environment variables to the deployment to facilitate inter-service routing.
+    enabled: false
+    
+    # Available routing strategies
+    # - loadbalancer: Appends the `LOAD_BALANCER_ADDRESS` environment variable to the deployment. 
+    #                 Should only be chosen for services that are capable of routing via load balancer (i.e send requests to the provided address and append `Host` header to determine destination)
+    strategy: 'loadbalancer'
 
   config:
     # Enables the below configurations to be applied as environment variables to the main deployment pod. The below configurations are primarily for Go microservices.

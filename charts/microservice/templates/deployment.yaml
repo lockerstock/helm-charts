@@ -103,6 +103,16 @@ spec:
                   key: AUTH0_CLIENT_SECRET
             {{- end }}
 
+            {{- if .Values.deployment.routing.enabled }}
+            {{- if eq .Values.deployment.routing.strategy "loadbalancer" }}
+            - name: LOAD_BALANCER_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  name: loadbalancer-address
+                  key: internal
+            {{- end }}
+            {{- end }}
+
             {{- if len .Values.deployment.env }}
             {{- toYaml .Values.deployment.env | nindent 12 }}
             {{- end }}
