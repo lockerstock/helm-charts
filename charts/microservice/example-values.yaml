@@ -34,10 +34,10 @@ ingressRoute:
       HeadersRegexp: # Map of key value pairs to regex match Headers on
         'X-Regex': 'else*'
         'X-Regex-Too': 'different*'
-      Methods: 
+      Methods: # Array of HTTP methods
         - GET
         - POST
-      Paths: 
+      Paths: # Array of full paths to match on
         - /path/to/resource
         - /path/to/different/resource
       PathPrefixes: # Array of "Regexp Syntax" paths to match on
@@ -49,38 +49,12 @@ ingressRoute:
       ClientIPs: # Map of ClientIPs to match on
         - '::1'
         - '10.0.0.1'
-    - Paths:
-        - /path/to/my/resource
-
-internalIngressRoute:
-  enabled: true
-  hostname: 'example.com'
-  annotations: 
-    something: else
-  rules:
-    - Headers: # Map of key value pairs to match Headers on
-        'X-Something': else 
-        'X-Another': thing 
-      HeadersRegexp: # Map of key value pairs to regex match Headers on
-        'X-Regex': 'else*'
-        'X-Regex-Too': 'different*'
-      Methods: 
-        - GET
-        - POST
-      Paths: 
-        - /path/to/resource
-        - /path/to/different/resource
-      PathPrefixes: # Array of "Regexp Syntax" paths to match on
-        - /other/resources
-        - /others
-      Queries: # Map of key value pairs to match Query parameters on
-        page: 1
-        per_page: 10
-      ClientIPs: # Map of ClientIPs to match on
-        - '::1'
-        - '10.0.0.1'
-    - Paths:
-        - /path/to/my/resource
+      middlewares:  # Array of Traefik Middleware resource names. Use `secured-chain` for external rules and `internal-only` for internal rules.
+        - secured-chain
+    - Paths: # Array of full paths to match on
+        - /path/to/my/private/resource
+      middlewares: # Array of Traefik Middleware resource names. Use `secured-chain` for external rules and `internal-only` for internal rules.
+        - internal-only
 
 resources: 
   # We usually recommend not to specify default resources and to leave this as a conscious
