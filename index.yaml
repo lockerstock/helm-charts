@@ -2,6 +2,27 @@ apiVersion: v1
 entries:
   microservice:
   - apiVersion: v2
+    created: "2023-07-28T22:23:07.893445036Z"
+    description: A Helm chart for Kubernetes-based microservices designed for the
+      LockerStock deployment pipeline.
+    digest: 8cb91c085c1cab748a7075e355b6ef190f9509e2a6b98dd6ea3f913c2f1f8dd9
+    home: https://helm.lockerstock.io
+    icon: https://avatars.githubusercontent.com/u/71104575
+    keywords:
+    - microservice
+    - remote-chart
+    maintainers:
+    - name: LockerStock
+      url: https://github.com/lockerstock
+    name: microservice
+    sources:
+    - https://github.com/lockerstock/helm-charts
+    - https://github.com/lockerstock/helm-charts/tree/main/charts/microservice
+    type: application
+    urls:
+    - https://helm.lockerstock.io/charts/microservice/microservice-v0.7.1.tgz
+    version: v0.7.1
+  - apiVersion: v2
     created: "2023-07-28T20:52:21.886679129Z"
     description: A Helm chart for Kubernetes-based microservices designed for the
       LockerStock deployment pipeline.
@@ -208,4 +229,4 @@ entries:
     urls:
     - https://helm.lockerstock.io/charts/microservice/microservice-v0.1.0.tgz
     version: v0.1.0
-generated: "2023-07-28T20:52:21.885204274Z"
+generated: "2023-07-28T22:23:07.892439923Z"
