@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [v0.7.1] - 2023-07-28
+
+### Fixed
+
+- Fixed broken IngressRoute Rule generation (https://github.com/lockerstock/helm-charts/pull/22).
+
 ## [v0.7.0] - 2023-07-28
 
 ### Added
