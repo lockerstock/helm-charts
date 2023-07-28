@@ -109,7 +109,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: loadbalancer-address
-                  key: address
+                  key: internal
             {{- end }}
             {{- end }}
 
