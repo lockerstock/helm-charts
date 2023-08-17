@@ -76,19 +76,11 @@ spec:
             {{- end }}
 
             {{- if .Values.deployment.opentelemetry.enabled }}
-            {{- if or (eq .Values.environment "production") (eq .Values.environment "staging") }}
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
               valueFrom:
                 configMapKeyRef:
                   name: otel-collector-routing
                   key: grpcAddress
-            {{- else }}
-            - name: OTEL_COLLECTOR_HOSTNAME
-              valueFrom:
-                configMapKeyRef:
-                  name: otel-collector-routing
-                  key: httpHostname
-            {{- end }}
             {{- end }}
 
             {{- if .Values.deployment.cache.enabled }}
