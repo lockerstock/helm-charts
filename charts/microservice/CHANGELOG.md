@@ -21,9 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [v0.7.2] - 2023-08-16
 
-### Added
+### Fixed
 
-- Conditional logic to add required OpenTelemetry environment variables based on deployment environment (https://github.com/lockerstock/helm-charts/pull/23).
+- OpenTelemetry environment variables to reference ConfigMap variable (https://github.com/lockerstock/helm-charts/pull/23).
 
 ## [v0.7.1] - 2023-07-28
 
