@@ -77,7 +77,10 @@ spec:
 
             {{- if .Values.deployment.opentelemetry.enabled }}
             - name: OTEL_EXPORTER_OTLP_ENDPOINT
-              value: k8s-app-opentelemetry:4317
+              valueFrom:
+                configMapKeyRef:
+                  name: otel-collector-routing
+                  key: grpcAddress
             {{- end }}
 
             {{- if .Values.deployment.cache.enabled }}
